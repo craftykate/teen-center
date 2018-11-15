@@ -1,0 +1,52 @@
+//*============TEXT STYLING============*/
+	body {
+		font: {
+			family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+			size: 1rem;
+			color: $text;
+		}
+	}
+
+	h1, h2, h3 {
+		margin-bottom: 5px;
+	}
+
+	h1 {
+		font-size: 200%;
+	}
+
+	h2 {
+		font-size: 150%;
+	}
+
+	h3 {
+		font-size: 120%;
+	}
+
+	p {
+		margin-bottom: 1em;
+		line-height:120%;
+		text-align:justify;
+	}
+
+	a {
+		color: $accent;
+		text-decoration: none;
+		&:visited {
+		}
+		&:hover {
+			color: $main;
+			text-decoration: underline;
+			cursor: pointer;
+		}
+	}
+
+	i, em {
+		font-style:italic;
+		color: lighten($text, 20%);
+	}
+
+	strong {
+		font-weight:bold;
+	}
+//*============END TEXT STYLING============*/
