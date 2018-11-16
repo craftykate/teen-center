@@ -30,15 +30,30 @@ class CheckIn extends Component {
       .catch(error => console.log(error));
   }
 
-  signIn = (ID) => {
-    console.log(ID)
+  signIn = (student, dateInfo) => {
+    // hide registration form if needed
+    this.setState({
+      registering: false
+    })
+
+    // add student to attendance log for the day
+    // add timeIn to student info object for attendance log
+    student.timeIn = dateInfo.timeIn;
+    // add student info to today's attendance log
+    axios.put(`/logs/${dateInfo.year}/${dateInfo.month}/${dateInfo.day}/${student.id}.json`, student)
+      .then(response => console.log(response))
+      .catch(error => console.log(error));
   }
 
   render() {
     return (
       <React.Fragment>
-        <SignIn 
-          signIn={this.signIn} />
+        {/* show sign in form if not registering a student */}
+        {!this.state.registering ? 
+          <SignIn 
+            signIn={this.signIn} />
+        // don't show anything if registering
+        : null}
 
         {/* show the register form if register link clicked */}
         {this.state.registering ? 

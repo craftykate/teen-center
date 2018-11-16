@@ -40,9 +40,14 @@ class Register extends Component {
         .then(students => {
           // if there are students in database make sure id is unique
           if (students.data) {
+            // turn keys of ids into an array
             const ids = Object.keys(students.data);
+            // if id is unique, register student
             if (!ids.includes(this.state.id)) {
               this.props.register(this.state);
+            // id isn't unique
+            } else {
+              console.log('id exists')
             }
           // no students yet, so just upload data
           } else {

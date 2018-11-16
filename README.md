@@ -45,6 +45,7 @@
 * Admin can choose a date and enter in id's and time in and time out to sign students in for a previous date
 * Admin can get a report for a certain time range showing number of unique students and number of total visits
 * Admin can get a report for a certain day showing who signed in and when they signed in and out
+* Admin can look up a student by ID to get their info. Possibly by name too, but that's way down the line
 
 * Eventually admin should be able to change their passwords somehow
 
