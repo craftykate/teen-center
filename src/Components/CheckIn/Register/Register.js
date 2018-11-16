@@ -1,4 +1,6 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
+import RegisterForm from './RegisterForm/RegisterForm';
+import axios from '../../../utils/axios-signin';
 
 // register a new student 
 class Register extends Component {
@@ -29,29 +31,35 @@ class Register extends Component {
     }
   }
 
+  // validate fields then add data to database
   validateInfo = () => {
+    // if all fields have been filled out
     if (this.state.id && this.state.name && this.state.school) {
-      this.props.register(this.state);
+      // get all the students to make sure id is unique
+      axios.get('https://teen-center-sign-in.firebaseio.com/students.json')
+        .then(students => {
+          // if there are students in database make sure id is unique
+          if (students.data) {
+            const ids = Object.keys(students.data);
+            if (!ids.includes(this.state.id)) {
+              this.props.register(this.state);
+            }
+          // no students yet, so just upload data
+          } else {
+            this.props.register(this.state);
+          }
+        })
+        .catch(error => console.log(error));
     }
   }
-  
+
   render() {
     return (
-      <React.Fragment>
-        <input type="text"
-          onChange={(e) => this.updateField(e, 'id')}
-          placeholder="ID"
-          value={this.state.id} />
-        <input type="text"
-          onChange={(e) => this.updateField(e, 'name')}
-          placeholder="Your Name"
-          value={this.state.name} />
-        <input type="text"
-          onChange={(e) => this.updateField(e, 'school')}
-          placeholder="Current School"
-          value={this.state.school} />
-        <button onClick={this.validateInfo}>Register</button>
-      </React.Fragment>
+      <RegisterForm
+        toggleRegister={this.props.toggleRegister}
+        state={this.state}
+        updateField={this.updateField}
+        validateInfo={this.validateInfo} />
     )
   }
 };
