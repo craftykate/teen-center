@@ -28,6 +28,8 @@ class Register extends Component {
           school: e.target.value
         });
         break;
+      default:
+        break;
     }
   }
 
@@ -38,12 +40,13 @@ class Register extends Component {
       // get all the students to make sure id is unique
       axios.get('https://teen-center-sign-in.firebaseio.com/students.json')
         .then(students => {
+          console.log(`getting all students ${students.data}`)
           // if there are students in database make sure id is unique
           if (students.data) {
             // turn keys of ids into an array
             const ids = Object.keys(students.data);
             // if id is unique, register student
-            if (!ids.includes(this.state.id)) {
+            if (!ids.includes(`id-${this.state.id}`)) {
               this.props.register(this.state);
             // id isn't unique
             } else {

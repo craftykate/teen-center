@@ -15,6 +15,7 @@ const registerForm = (props) => (
       placeholder="Current School"
       value={props.state.school} />
     <button onClick={props.validateInfo}>Register</button>
+    {/* eslint-disable-next-line */}
     <a onClick={props.toggleRegister}>(cancel)</a>
   </React.Fragment>
 );

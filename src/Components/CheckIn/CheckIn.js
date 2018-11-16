@@ -14,7 +14,12 @@ class CheckIn extends Component {
 
   // get list of today's students when component mounts
   componentWillMount() {
-    this.getCurrentStudents();
+    this.getCurrentStudents()
+      .then(currentStudents => {
+        this.setState({
+          currentStudents: currentStudents
+        })
+      })
   }
 
   // toggle wether registration form is visible
@@ -33,30 +38,29 @@ class CheckIn extends Component {
     })
 
     // post student data to database
-    axios.put(`/students/${studentInfo.id}.json`, studentInfo)
-      .then(response => console.log(response))
+    axios.put(`/students/id-${studentInfo.id}.json`, studentInfo)
+      .then(response => {
+        console.log(`registering student ${response}`)
+      })
       .catch(error => console.log(error));
   }
 
   signIn = (student, dateInfo) => {
-    // hide registration form if needed
-    this.setState({
-      registering: false
-    })
-
     // add student to attendance log for the day
     // add timeIn to student info object for attendance log
     student.timeIn = dateInfo.timeIn;
     // add student info to today's attendance log
-    axios.put(`/logs/${dateInfo.year}/${dateInfo.month}/${dateInfo.day}/${student.id}.json`, student)
+    axios.put(`/logs/${dateInfo.year}/${dateInfo.month}/${dateInfo.day}/id-${student.id}.json`, student)
       .then(response => {
+        console.log(`signing in student ${response}`)
         // if student successfully signed in, update state with current student
         // (since response = 200 I can update state instead of hitting database for current info)
         if (response.status === 200) {
-          const currentStudents = this.state.currentStudents;
-          const updatedStudents = [...currentStudents, student];
+          const updatedStudents = {...this.state.currentStudents};
+          updatedStudents[`id-${student.id}`] = student;
           this.setState({
-            currentStudents: updatedStudents
+            currentStudents: updatedStudents,
+            registering: false
           })
         } else {
           console.log('error signing in')
@@ -69,13 +73,13 @@ class CheckIn extends Component {
   signOut = (ID) => {
     const dateInfo = this.dateInfo();
     // add sign out time to database
-    axios.put(`/logs/${dateInfo.year}/${dateInfo.month}/${dateInfo.day}/${ID}/timeOut.json`, dateInfo.now)
+    axios.put(`/logs/${dateInfo.year}/${dateInfo.month}/${dateInfo.day}/id-${ID}/timeOut.json`, dateInfo.now)
       // if student successfully signed out, update state with sign out time
       .then(response => {
-        console.log(response)
+        console.log(`signing out student ${response}`)
         if (response.status === 200) {
-          const currentStudents = this.state.currentStudents;
-          currentStudents[ID].timeOut = dateInfo.now;
+          const currentStudents = {...this.state.currentStudents};
+          currentStudents[`id-${ID}`].timeOut = dateInfo.now;
           this.setState({
             currentStudents: currentStudents
           })
@@ -90,16 +94,14 @@ class CheckIn extends Component {
     // get info about today's date
     const dateInfo = this.dateInfo();
     // get signed in students
-    axios.get(`https://teen-center-sign-in.firebaseio.com/logs/${dateInfo.year}/${dateInfo.month}/${dateInfo.day}.json`)
+    return axios.get(`https://teen-center-sign-in.firebaseio.com/logs/${dateInfo.year}/${dateInfo.month}/${dateInfo.day}.json`)
       .then(currentStudents => {
+        console.log(`getting checked-in students ${currentStudents.data}`)
         // if there are students signed in
         if (currentStudents.data) {
-          console.log(currentStudents.data)
-          this.setState({
-            currentStudents: currentStudents.data
-          })
+          return currentStudents.data
         } else {
-          console.log('no students')
+          return {}
         }
       })
       .catch(error => console.log(error))
@@ -131,8 +133,8 @@ class CheckIn extends Component {
             toggleRegister={this.toggleRegister}
             register={this.registerStudent}/>
           // show the register link instead of register form
+          /* eslint-disable-next-line */
           : <a onClick={this.toggleRegister}>(or register)</a>}
-
         <AttendanceList 
           currentStudents={this.state.currentStudents} 
           signOut={this.signOut} />

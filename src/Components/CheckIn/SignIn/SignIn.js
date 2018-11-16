@@ -21,12 +21,13 @@ class SignIn extends Component {
       // get all the students to make sure id exists
       axios.get('https://teen-center-sign-in.firebaseio.com/students.json')
         .then(students => {
+          console.log(`getting all students ${students.data}`)
           // if there are students in the database make sure id exists
           if (students.data) {
             // turn keys of ids into an array
             const ids = Object.keys(students.data);
             // if id exists...
-            if (ids.includes(ID)) {
+            if (ids.includes(`id-${ID}`)) {
               // get info on date for timeIn and attendance log
               const now = new Date();
               const dateInfo = {
@@ -39,19 +40,20 @@ class SignIn extends Component {
               // get signed in students
               axios.get(`https://teen-center-sign-in.firebaseio.com/logs/${dateInfo.year}/${dateInfo.month}/${dateInfo.day}.json`)
                 .then(currentStudents => {
+                  console.log(`getting signed in students ${currentStudents.data}`)
                   // if there are students signed in
                   if (currentStudents.data) {
                     // turn keys of ids into an array
                     const ids = Object.keys(currentStudents.data);
                     // if id is unique, sign in student
-                    if (!ids.includes(ID)) {
-                      this.sendSignInInfo(students.data[ID], dateInfo);
+                    if (!ids.includes(`id-${ID}`)) {
+                      this.sendSignInInfo(students.data[`id-${ID}`], dateInfo);
                     } else {
                       console.log('already signed in')
                     }
                     // no students signed in, so just sign in
                   } else {
-                    this.sendSignInInfo(students.data[ID], dateInfo);
+                    this.sendSignInInfo(students.data[`id-${ID}`], dateInfo);
                   }
                 })
                 .catch(error => console.log(error))

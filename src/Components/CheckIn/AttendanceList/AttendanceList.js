@@ -14,7 +14,28 @@ const attendanceList = (props) => {
     // time is undefined, so they haven't logged out yet, so show log out link
     } else {
       return (
+        /* eslint-disable-next-line */
         <a onClick={() => props.signOut(ID)}>sign out</a>)
+    }
+  }
+
+  // show no students message if no students have signed in yet
+  let currentStudents = (
+    <tr>
+      <td colSpan="3">No students yet</td>
+    </tr>
+  )
+  if (Object.keys(props.currentStudents).length > 0) {
+    currentStudents = [];
+    for (const studentInfo in props.currentStudents) {
+      const student = props.currentStudents[studentInfo];
+      currentStudents.push(
+        [<tr key={student.id}>
+          <td>{student.name}</td>
+          <td>{convertTime(student.timeIn)}</td>
+          <td>{convertTime(student.timeOut, student.id)}</td>
+        </tr>]
+      )
     }
   }
 
@@ -31,21 +52,7 @@ const attendanceList = (props) => {
         </tr>
       </thead>
       <tbody>
-        {props.currentStudents.length > 0 ? 
-          props.currentStudents.map(student => {
-            if (student !== null) {
-              return (
-                <tr key={student.id}>
-                  <td>{student.name}</td>
-                  <td>{convertTime(student.timeIn)}</td>
-                  <td>{convertTime(student.timeOut, student.id)}</td>
-                </tr>
-              )
-            }
-          })
-        : <tr>
-            <td colSpan="3">No students yet</td>
-          </tr>}
+        {currentStudents}
       </tbody>
     </table>
   )
