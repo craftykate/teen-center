@@ -1,5 +1,6 @@
 import React from 'react';
 
+// fields to register new students
 const registerForm = (props) => (
   <React.Fragment>
     <input type="text"

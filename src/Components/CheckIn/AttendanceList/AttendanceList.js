@@ -1,5 +1,6 @@
 import React from 'react';
 
+// show today's students
 const attendanceList = (props) => {
 
   // function to convert date to readable time format
@@ -25,7 +26,9 @@ const attendanceList = (props) => {
       <td colSpan="3">No students yet</td>
     </tr>
   )
-  if (Object.keys(props.currentStudents).length > 0) {
+
+  // display today's students if there are any
+  if (props.currentStudents && Object.keys(props.currentStudents).length > 0) {
     currentStudents = [];
     for (const studentInfo in props.currentStudents) {
       const student = props.currentStudents[studentInfo];

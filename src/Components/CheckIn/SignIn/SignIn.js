@@ -70,6 +70,7 @@ class SignIn extends Component {
     }
   }
 
+  // send relevant info up to sign them in
   sendSignInInfo = (student, dateInfo) => {
     // reset search field
     this.setState({

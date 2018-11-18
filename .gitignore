@@ -10,7 +10,7 @@
 
 # production
 /build
-secret.js
+variables.js
 
 # misc
 .DS_Store

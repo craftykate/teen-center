@@ -3,23 +3,30 @@ import SignIn from './SignIn/SignIn';
 import Register from './Register/Register';
 import AttendanceList from './AttendanceList/AttendanceList';
 import axios from '../../utils/axios-signin';
+import fire from '../../utils/fire';
 
 // shows sign in field, registration form and current attendance log
 class CheckIn extends Component {
   state = {
     registering: false, // whether student is registering
-
-    currentStudents: []
+    currentStudents: [] // students who signed in today
   }
 
   // get list of today's students when component mounts
   componentWillMount() {
-    this.getCurrentStudents()
-      .then(currentStudents => {
-        this.setState({
-          currentStudents: currentStudents
+    fire.auth().currentUser.getIdToken(true).then(token => {
+      this.getCurrentStudents(token)
+        .then(currentStudents => {
+          this.setState({
+            currentStudents: currentStudents
+          })
         })
-      })
+    })
+  }
+
+  // get user's token to access database
+  getToken = () => {
+    return fire.auth().currentUser.getIdToken(true)
   }
 
   // toggle wether registration form is visible
@@ -45,6 +52,7 @@ class CheckIn extends Component {
       .catch(error => console.log(error));
   }
 
+  // sign a student in for the day
   signIn = (student, dateInfo) => {
     // add student to attendance log for the day
     // add timeIn to student info object for attendance log
@@ -90,11 +98,13 @@ class CheckIn extends Component {
       .catch(error => console.log(error))
   }
 
-  getCurrentStudents = () => {
+  // get list of currently signed in students
+  getCurrentStudents = (token) => {
     // get info about today's date
     const dateInfo = this.dateInfo();
     // get signed in students
-    return axios.get(`https://teen-center-sign-in.firebaseio.com/logs/${dateInfo.year}/${dateInfo.month}/${dateInfo.day}.json`)
+
+    return axios.get(`https://teen-center-sign-in.firebaseio.com/logs/${dateInfo.year}/${dateInfo.month}/${dateInfo.day}.json?auth=${token}`)
       .then(currentStudents => {
         console.log(`getting checked-in students ${currentStudents.data}`)
         // if there are students signed in
@@ -107,6 +117,7 @@ class CheckIn extends Component {
       .catch(error => console.log(error))
   }
 
+  // reusable date info for signing in and out
   dateInfo = () => {
     const now = new Date();
     return {
