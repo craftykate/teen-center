@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import RegisterForm from './RegisterForm/RegisterForm';
 import axios from '../../../utils/axios-signin';
+import fire from '../../../utils/fire';
 
 // register a new student 
 class Register extends Component {
@@ -38,26 +39,28 @@ class Register extends Component {
     // if all fields have been filled out
     if (this.state.id && this.state.name && this.state.school) {
       // get all the students to make sure id is unique
-      axios.get('https://teen-center-sign-in.firebaseio.com/students.json')
-        .then(students => {
-          console.log(`getting all students ${students.data}`)
-          // if there are students in database make sure id is unique
-          if (students.data) {
-            // turn keys of ids into an array
-            const ids = Object.keys(students.data);
-            // if id is unique, register student
-            if (!ids.includes(`id-${this.state.id}`)) {
-              this.props.register(this.state);
-            // id isn't unique
+      fire.auth().currentUser.getIdToken(true).then(token => {
+        axios.get(`https://teen-center-sign-in.firebaseio.com/students.json?auth=${token}`)
+          .then(students => {
+            console.log(`getting all students ${students.data}`)
+            // if there are students in database make sure id is unique
+            if (students.data) {
+              // turn keys of ids into an array
+              const ids = Object.keys(students.data);
+              // if id is unique, register student
+              if (!ids.includes(`id-${this.state.id}`)) {
+                this.props.register(this.state);
+              // id isn't unique
+              } else {
+                console.log('id exists')
+              }
+            // no students yet, so just upload data
             } else {
-              console.log('id exists')
+              this.props.register(this.state);
             }
-          // no students yet, so just upload data
-          } else {
-            this.props.register(this.state);
-          }
-        })
-        .catch(error => console.log(error));
+          })
+          .catch(error => console.log(error));
+      })
     }
   }
 

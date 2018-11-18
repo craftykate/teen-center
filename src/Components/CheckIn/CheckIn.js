@@ -45,11 +45,13 @@ class CheckIn extends Component {
     })
 
     // post student data to database
-    axios.put(`/students/id-${studentInfo.id}.json`, studentInfo)
-      .then(response => {
-        console.log(`registering student ${response}`)
-      })
-      .catch(error => console.log(error));
+    this.getToken().then(token => {
+      axios.put(`/students/id-${studentInfo.id}.json?auth=${token}`, studentInfo)
+        .then(response => {
+          console.log(`registering student ${response}`)
+        })
+        .catch(error => console.log(error));
+    })
   }
 
   // sign a student in for the day
@@ -58,44 +60,49 @@ class CheckIn extends Component {
     // add timeIn to student info object for attendance log
     student.timeIn = dateInfo.timeIn;
     // add student info to today's attendance log
-    axios.put(`/logs/${dateInfo.year}/${dateInfo.month}/${dateInfo.day}/id-${student.id}.json`, student)
-      .then(response => {
-        console.log(`signing in student ${response}`)
-        // if student successfully signed in, update state with current student
-        // (since response = 200 I can update state instead of hitting database for current info)
-        if (response.status === 200) {
-          const updatedStudents = {...this.state.currentStudents};
-          updatedStudents[`id-${student.id}`] = student;
-          this.setState({
-            currentStudents: updatedStudents,
-            registering: false
-          })
-        } else {
-          console.log('error signing in')
-        }
-      })
-      .catch(error => console.log(error));
+    this.getToken().then(token => {
+      axios.put(`/logs/${dateInfo.year}/${dateInfo.month}/${dateInfo.day}/id-${student.id}.json?auth=${token}`, student)
+        .then(response => {
+          console.log(`signing in student ${response}`)
+          // if student successfully signed in, update state with current student
+          // (since response = 200 I can update state instead of hitting database for current info)
+          if (response.status === 200) {
+            const updatedStudents = {...this.state.currentStudents};
+            updatedStudents[`id-${student.id}`] = student;
+            this.setState({
+              currentStudents: updatedStudents,
+              registering: false
+            })
+          } else {
+            console.log('error signing in')
+          }
+        })
+        .catch(error => console.log(error));
+    })
+
   }
 
   // sign student out
   signOut = (ID) => {
     const dateInfo = this.dateInfo();
     // add sign out time to database
-    axios.put(`/logs/${dateInfo.year}/${dateInfo.month}/${dateInfo.day}/id-${ID}/timeOut.json`, dateInfo.now)
-      // if student successfully signed out, update state with sign out time
-      .then(response => {
-        console.log(`signing out student ${response}`)
-        if (response.status === 200) {
-          const currentStudents = {...this.state.currentStudents};
-          currentStudents[`id-${ID}`].timeOut = dateInfo.now;
-          this.setState({
-            currentStudents: currentStudents
-          })
-        } else {
-          console.log('error signing out')
-        }
-      })
-      .catch(error => console.log(error))
+    this.getToken().then(token => {
+      axios.put(`/logs/${dateInfo.year}/${dateInfo.month}/${dateInfo.day}/id-${ID}/timeOut.json?auth=${token}`, dateInfo.now)
+        // if student successfully signed out, update state with sign out time
+        .then(response => {
+          console.log(`signing out student ${response}`)
+          if (response.status === 200) {
+            const currentStudents = {...this.state.currentStudents};
+            currentStudents[`id-${ID}`].timeOut = dateInfo.now;
+            this.setState({
+              currentStudents: currentStudents
+            })
+          } else {
+            console.log('error signing out')
+          }
+        })
+        .catch(error => console.log(error))
+    })
   }
 
   // get list of currently signed in students
