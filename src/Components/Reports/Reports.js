@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
+import Practice from './Practice';
 
 class Reports extends Component {
   render() {
     return (
-      <p>reports</p>
+      <Practice />
     )
   }
 }

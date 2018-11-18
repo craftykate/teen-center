@@ -46,7 +46,11 @@ const attendanceList = (props) => {
     <table>
       <thead>
         <tr>
-          <th colSpan="3">Today's Attendance<br/>(<a onClick={props.refreshStudentList}>refresh</a> if you don't see your name)</th>
+          <th colSpan="3">
+            Today's Attendance<br />
+            {/* eslint-disable-next-line */}
+            (<a onClick={props.refreshStudentList}>refresh</a> if you don't see your name)
+          </th>
         </tr>
         <tr>
           <th>Name</th>
