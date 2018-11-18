@@ -2,12 +2,12 @@ import React from 'react';
 import Header from '../Header/Header';
 
 const layout = (props) => (
-  <React.Fragment>
+  <div id="wrapper">
     <Header />
     <main>
       {props.children}
     </main>
-  </React.Fragment>
+  </div>
 );
 
 export default layout;
