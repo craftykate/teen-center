@@ -4,10 +4,12 @@ import fire from '../../utils/fire';
 import Layout from '../Layout/Layout';
 import Authorize from '../Authorize/Authorize';
 import CheckIn from '../CheckIn/CheckIn';
+import Reports from '../Reports/Reports';
 
 class App extends Component {
   state = {
-    user: null
+    user: null,
+    account: ''
   };
 
   // listen if user logs in
@@ -19,22 +21,51 @@ class App extends Component {
   authListener = () => {
     fire.auth().onAuthStateChanged((user) => {
       if (user) {
-        this.setState({ user });
+        this.setState({ 
+          user,
+          account: localStorage.getItem('account')
+        });
         localStorage.setItem('user', user.uid);
       } else {
-        this.setState({ user: null });
+        this.setState({ 
+          user: null,
+          account: ''
+        });
         localStorage.removeItem('user');
+        localStorage.removeItem('account');
       }
     });
   }
 
+  setAccount = (account) => {
+    if (account === 'student') {
+      this.setState({
+        account: 'student'
+      })
+    } else if (account === 'admin') {
+      this.setState({
+        account: 'admin'
+      })
+    } 
+    localStorage.setItem('account', account);
+  }
+
   render() {
     // show logged in content only if logged in, otherwise show login form
-    const studentContent = this.state.user ? <CheckIn /> : null;
+    let content = null;
+    if (this.state.account === 'student') {
+      content = <CheckIn />;
+    } else if (this.state.account === 'admin') {
+      content = <Reports />;
+    } else {
+      
+    }
     return (
       <Layout user={this.state.user}>
-        <Authorize user={this.state.user} />
-        {studentContent}
+        <Authorize 
+          user={this.state.user} 
+          setAccount={this.setAccount} />
+        {content}
       </Layout>
     );
   }

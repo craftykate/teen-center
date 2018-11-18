@@ -124,6 +124,18 @@ class CheckIn extends Component {
       .catch(error => console.log(error))
   }
 
+  // refresh link to refresh student list if there are multiple screens open
+  refreshStudentList = () => {
+    this.getToken().then(token => {
+      this.getCurrentStudents(token)
+      .then(currentStudents => {
+        this.setState({
+          currentStudents
+        })
+      })
+    })
+  }
+
   // reusable date info for signing in and out
   dateInfo = () => {
     const now = new Date();
@@ -154,7 +166,8 @@ class CheckIn extends Component {
           /* eslint-disable-next-line */
           : <a onClick={this.toggleRegister}>(or register)</a>}
         <AttendanceList 
-          currentStudents={this.state.currentStudents} 
+          currentStudents={this.state.currentStudents}
+          refreshStudentList={this.refreshStudentList} 
           signOut={this.signOut} />
 
       </React.Fragment>

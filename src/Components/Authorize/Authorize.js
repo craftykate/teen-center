@@ -16,9 +16,14 @@ class Authorize extends Component {
   }
 
   // log in with form data
-  login = (e) => {
+  login = (e, account) => {
     e.preventDefault();
     fire.auth().signInWithEmailAndPassword(this.state.email, this.state.password).then((u) => {
+      this.setState({
+        email: '',
+        password: ''
+      })
+    this.props.setAccount(account);
     }).catch((error) => {
       console.log(error);
     });
@@ -54,7 +59,8 @@ class Authorize extends Component {
             type="password"
             name="password"
             placeholder="Password" />
-          <button type="submit" onClick={this.login}>Login</button>
+          <button type="submit" onClick={(e) => this.login(e, 'student')}>Launch sign in page</button>
+          <button type="submit" onClick={(e) => this.login(e, 'admin')}>Log in as Admin</button>
         </form>
       )
     }
