@@ -1,32 +1,3 @@
-# Components
-* **App** state: user
-  * **Layout** stateless
-    * **Header** stateless
-      * Logo
-      * Log out link
-    * Children:
-      * **Admin log in** stateless
-        * Form to log in
-      * **Admin Report** state: full report
-        * Full report
-        * Day report
-      * **Student check in** state: current students
-        * Sign in form
-          * Pop up confirmation window
-        * **Sign up form**
-        * **Daily attendance**
-    * **Footer**
-
-# State
-* User 
-  * Student or admin
-* Today's current students
-  * [{name, timeIn, timeOut}]
-* Full report
-  * [{from, to, uniqueKids, totalVisits}]
-* Day report
-  * [{day, [{name, timeIn, timeOut}]}]
-
 # To Do
 * Order attendance list by time in - or by first name? Probably name
 * Change times to 12 hr

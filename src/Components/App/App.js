@@ -37,6 +37,7 @@ class App extends Component {
     });
   }
 
+  // set state for admin or student account
   setAccount = (account) => {
     if (account === 'student') {
       this.setState({

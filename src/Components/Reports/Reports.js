@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import StudentInfo from './StudentInfo/StudentInfo';
-import singleDay from './Single Day/SingleDay';
 import SingleDay from './Single Day/SingleDay';
 
 class Reports extends Component {
