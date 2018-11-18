@@ -25,11 +25,12 @@
 //*============ HEADER ============*/
 	header {
 		position: relative;
+		padding-bottom: 10px;
 		color: $main;
+		border-bottom: 1px solid $main;
 		h1 {
-			font: {
-				size: 3em;
-			}
+			margin-bottom: 10px;
+			font-size: 3em;
 		}
 		ul {
 			position: relative;
@@ -59,21 +60,56 @@
 //*============ END HEADER ============*/
 
 //*============ MAIN ============*/
-main {
+form {
+	input, button {
+		display: block;
+		margin-bottom: 10px;
+		padding: .5em 1em;
+		font-size: 1em;
+		outline: 0;
+		transition: all .25s;
+		@include round(5px);
+	}
+	input {
+		border: 1px solid lighten(gray, 30%);
+		&:focus {
+			outline-style:none;
+			outline-width:initial;
+			outline-color:#000000;	
+			box-shadow: lighten(gray, 40%) 0px 0px 3px 1px inset;
+		}
+	}
+	button {
+		display: inline;
+		margin-right: 10px;
+		background-color: $accent;
+		font-size: 1em;
+		color: white;
+		border: none;
+		text-decoration: none;
+		cursor: pointer;
+		&:hover {
+			background-color: darken($accent, 20%);
+		}
+	}
 }
 //*============ END MAIN ============*/
 
 //*============ FOOTER ============*/
 footer {
 	border-top: 1px solid $main;
-	margin-bottom: 30px;
-	padding-top: 10px;
+	padding-top: 15px;
 	text-align: center;
 	clear: both;
-	color: $text;
+	color: lighten($text, 20%);
+	font-size: .9em;
 	ul {
 		li {
 			display: inline;
+			a {
+				color: inherit;
+				text-decoration: underline;
+			}
 			&:not(:first-child) {
 				&::before {
 					content: " | ";

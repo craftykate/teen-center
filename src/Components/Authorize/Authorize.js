@@ -5,7 +5,8 @@ import fire from '../../utils/fire';
 class Authorize extends Component {
   state = {
     email: '',
-    password: ''
+    password: '',
+    message: ''
   }
 
   // update state with contents of input field
@@ -42,7 +43,7 @@ class Authorize extends Component {
     if (this.props.user) {
       logInOut = (
         /* eslint-disable-next-line */ 
-        < a onClick = { this.logout } > log out</a >
+        < a onClick={this.logout}>log out admin</a >
       )
     } else {
       logInOut = (
@@ -52,7 +53,7 @@ class Authorize extends Component {
             onChange={this.handleTermChange}
             type="email"
             name="email"
-            placeholder="Enter email" />
+            placeholder="Admin Email" />
           <input
             value={this.state.password}
             onChange={this.handleTermChange}

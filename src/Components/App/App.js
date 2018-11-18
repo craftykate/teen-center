@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import './App.css';
 import fire from '../../utils/fire';
 import Layout from '../Layout/Layout';
-import Authorize from '../Authorize/Authorize';
 import CheckIn from '../CheckIn/CheckIn';
 import Reports from '../Reports/Reports';
 
@@ -58,14 +57,12 @@ class App extends Component {
       content = <CheckIn />;
     } else if (this.state.account === 'admin') {
       content = <Reports />;
-    } else {
-      
-    }
+    } 
+    
     return (
-      <Layout user={this.state.user}>
-        <Authorize 
-          user={this.state.user} 
-          setAccount={this.setAccount} />
+      <Layout 
+        user={this.state.user}
+        setAccount={this.setAccount} >
         {content}
       </Layout>
     );

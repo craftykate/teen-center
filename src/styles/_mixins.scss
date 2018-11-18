@@ -36,11 +36,9 @@
 	// Applies button styling to links. Default set.
 	// ex: @include button; for default
 	// ex: @include button($main, pink) to set color and hover color)
-	@mixin button ($color: gray, $hover: darken(gray, 40%)) {
+	@mixin button ($color: $accent, $hover: darken($accent, 20%)) {
 		display: block;
-		margin: 0 auto;
 		padding: .5em 1em;
-		font-size: 1em;
 		text-align: center;
 		border-radius: 10px;
 		background-color: $color;
