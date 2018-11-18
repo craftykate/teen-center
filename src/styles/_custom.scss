@@ -29,7 +29,7 @@
 		color: $main;
 		border-bottom: 1px solid $main;
 		h1 {
-			margin-bottom: 10px;
+			// margin-bottom: 10px;
 			font-size: 3em;
 		}
 		ul {
@@ -61,6 +61,7 @@
 
 //*============ MAIN ============*/
 form {
+	margin-top: 15px;
 	input, button {
 		display: block;
 		margin-bottom: 10px;
@@ -79,6 +80,15 @@ form {
 			box-shadow: lighten(gray, 40%) 0px 0px 3px 1px inset;
 		}
 	}
+	label {
+		display: block;
+		margin-bottom: 5px;
+		color: $text;
+	}
+	p.message {
+		color: red;
+		margin-bottom: 5px;
+	}
 	button {
 		display: inline;
 		margin-right: 10px;
@@ -91,10 +101,6 @@ form {
 		&:hover {
 			background-color: darken($accent, 20%);
 		}
-	}
-	p.message {
-		color: red;
-		margin-bottom: 5px;
 	}
 }
 //*============ END MAIN ============*/

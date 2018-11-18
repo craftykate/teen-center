@@ -5,7 +5,8 @@ import fire from '../../../utils/fire';
 // sign in a student
 class SignIn extends Component {
   state = {
-    searchTerm: ''
+    searchTerm: '',
+    message: ''
   }
 
   // update state with contents of input field
@@ -17,8 +18,12 @@ class SignIn extends Component {
 
   // check if ID exists in database
   validateID = (e, ID) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+    }
     // if "enter" key pressed and input isn't empty...
     if (e.key === 'Enter' && ID) {
+      e.preventDefault();
       // get all the students to make sure id exists
       fire.auth().currentUser.getIdToken(true).then(token => {
         axios.get(`https://teen-center-sign-in.firebaseio.com/students.json?auth=${token}`)
@@ -51,7 +56,9 @@ class SignIn extends Component {
                       if (!ids.includes(`id-${ID}`)) {
                         this.sendSignInInfo(students.data[`id-${ID}`], dateInfo);
                       } else {
-                        console.log('already signed in')
+                        this.setState({
+                          message: "That student ID has already signed in today"
+                        })
                       }
                       // no students signed in, so just sign in
                     } else {
@@ -61,11 +68,15 @@ class SignIn extends Component {
                   .catch(error => console.log(error))
                 // id does not exist in database
               } else {
-                console.log('doesnt exist')
+                this.setState({
+                  message: "That student ID is not registered yet"
+                })
               }
               // no students records, so student doesn't exists
             } else {
-              console.log('empty')
+              this.setState({
+                message: "That student ID is not registered yet"
+              })
             }
           })
           .catch(error => console.log(error));
@@ -77,7 +88,8 @@ class SignIn extends Component {
   sendSignInInfo = (student, dateInfo) => {
     // reset search field
     this.setState({
-      searchTerm: ''
+      searchTerm: '',
+      message: ''
     });
     // send along name and id of student
     const currentStudent = { ...student }
@@ -91,14 +103,16 @@ class SignIn extends Component {
 
   render() {
     return (
-      <React.Fragment>
-        <p>Sign In</p>
+      <form>
+        <p className="message">{this.state.message}</p>
+        <label htmlFor="id">Sign in with your ID:</label>
         <input type="text"
+          name="id"
           onChange={this.handleTermChange}
           onKeyPress={(e) => this.validateID(e, this.state.searchTerm)}
           placeholder="Student ID"
           value={this.state.searchTerm} />
-      </React.Fragment>
+      </form>
     )
   }
 };
