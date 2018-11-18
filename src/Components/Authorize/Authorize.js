@@ -22,11 +22,14 @@ class Authorize extends Component {
     fire.auth().signInWithEmailAndPassword(this.state.email, this.state.password).then((u) => {
       this.setState({
         email: '',
-        password: ''
+        password: '',
+        message: ''
       })
     this.props.setAccount(account);
     }).catch((error) => {
-      console.log(error);
+      this.setState({
+        message: error.message
+      })
     });
   }
 
@@ -37,7 +40,6 @@ class Authorize extends Component {
 
   
   render() {
-
     // show login form or logout link depending on user state
     let logInOut = null;
     if (this.props.user) {
@@ -48,6 +50,7 @@ class Authorize extends Component {
     } else {
       logInOut = (
         <form>
+          <p className="message">{this.state.message}</p>
           <input
             value={this.state.email}
             onChange={this.handleTermChange}

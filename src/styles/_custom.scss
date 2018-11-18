@@ -92,6 +92,10 @@ form {
 			background-color: darken($accent, 20%);
 		}
 	}
+	p.message {
+		color: red;
+		margin-bottom: 5px;
+	}
 }
 //*============ END MAIN ============*/
 
