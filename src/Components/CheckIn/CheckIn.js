@@ -61,7 +61,7 @@ class CheckIn extends Component {
     student.timeIn = dateInfo.timeIn;
     // add student info to today's attendance log
     this.getToken().then(token => {
-      axios.put(`/logs/${dateInfo.year}/${dateInfo.month}/${dateInfo.day}/id-${student.id}.json?auth=${token}`, student)
+      axios.put(`/logs/${dateInfo.year}${dateInfo.month}${dateInfo.day}/id-${student.id}.json?auth=${token}`, student)
         .then(response => {
           console.log(`signing in student ${response}`)
           // if student successfully signed in, update state with current student
@@ -87,7 +87,7 @@ class CheckIn extends Component {
     const dateInfo = this.dateInfo();
     // add sign out time to database
     this.getToken().then(token => {
-      axios.put(`/logs/${dateInfo.year}/${dateInfo.month}/${dateInfo.day}/id-${ID}/timeOut.json?auth=${token}`, dateInfo.now)
+      axios.put(`/logs/${dateInfo.year}${dateInfo.month}${dateInfo.day}/id-${ID}/timeOut.json?auth=${token}`, dateInfo.now)
         // if student successfully signed out, update state with sign out time
         .then(response => {
           console.log(`signing out student ${response}`)
@@ -111,7 +111,7 @@ class CheckIn extends Component {
     const dateInfo = this.dateInfo();
     // get signed in students
 
-    return axios.get(`https://teen-center-sign-in.firebaseio.com/logs/${dateInfo.year}/${dateInfo.month}/${dateInfo.day}.json?auth=${token}`)
+    return axios.get(`https://teen-center-sign-in.firebaseio.com/logs/${dateInfo.year}${dateInfo.month}${dateInfo.day}.json?auth=${token}`)
       .then(currentStudents => {
         console.log(`getting checked-in students ${currentStudents.data}`)
         // if there are students signed in

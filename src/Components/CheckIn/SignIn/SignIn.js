@@ -40,7 +40,7 @@ class SignIn extends Component {
                 }
                 // make sure student isn't signed in already
                 // get signed in students
-                axios.get(`https://teen-center-sign-in.firebaseio.com/logs/${dateInfo.year}/${dateInfo.month}/${dateInfo.day}.json?auth=${token}`)
+                axios.get(`https://teen-center-sign-in.firebaseio.com/logs/${dateInfo.year}${dateInfo.month}${dateInfo.day}.json?auth=${token}`)
                   .then(currentStudents => {
                     console.log(`getting signed in students ${currentStudents.data}`)
                     // if there are students signed in
