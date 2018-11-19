@@ -38,15 +38,7 @@ class App extends Component {
 
   // set state for admin or student account
   setAccount = (account) => {
-    if (account === 'student') {
-      this.setState({
-        account: 'student'
-      })
-    } else if (account === 'admin') {
-      this.setState({
-        account: 'admin'
-      })
-    } 
+    this.setState({ account })
     localStorage.setItem('account', account);
   }
 

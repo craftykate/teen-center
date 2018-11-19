@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import SignIn from './SignIn/SignIn';
-import Register from './Register/Register';
 import AttendanceList from './AttendanceList/AttendanceList';
 import axios from '../../utils/axios-signin';
 import fire from '../../utils/fire';
@@ -150,25 +149,20 @@ class CheckIn extends Component {
   render() {
     return (
       <React.Fragment>
-        {/* show sign in form if not registering a student */}
-        {!this.state.registering ? 
-          <SignIn 
-            signIn={this.signIn} />
-        // don't show anything if registering
-        : null}
 
-        {/* show the register form if register link clicked */}
-        {this.state.registering ? 
-          <Register
-            toggleRegister={this.toggleRegister}
-            register={this.registerStudent}/>
-          // show the register link instead of register form
-          /* eslint-disable-next-line */
-          : <a onClick={this.toggleRegister}>(or register)</a>}
-        <AttendanceList 
-          currentStudents={this.state.currentStudents}
-          refreshStudentList={this.refreshStudentList} 
-          signOut={this.signOut} />
+        {/* show the sign in form or register form */}
+        <SignIn
+          signIn={this.signIn}
+          registering={this.state.registering}
+          toggleRegister={this.toggleRegister}
+          register={this.registerStudent} />
+
+        {!this.state.registering ? 
+          <AttendanceList 
+            currentStudents={this.state.currentStudents}
+            refreshStudentList={this.refreshStudentList} 
+            signOut={this.signOut} />
+        : null}
 
       </React.Fragment>
     )

@@ -8,36 +8,33 @@ class Register extends Component {
   state = {
     id: '',
     name: '',
-    school: ''
+    phone: '',
+    school: '',
+    year: '',
+    parents: '',
+    parentPhone: '',
+    agree: false,
+    message: ''
   }
 
   // update the correct state field with whatever has been typed in
   updateField = (e, fieldName) => {
-    switch (fieldName) {
-      case 'id':
-        this.setState({
-          id: e.target.value
-        });
-        break;
-      case 'name':
-        this.setState({
-          name: e.target.value
-        });
-        break;
-      case 'school':
-        this.setState({
-          school: e.target.value
-        });
-        break;
-      default:
-        break;
-    }
+    this.setState({
+      [fieldName]: e.target.value
+    })
+  }
+
+  toggleCheckbox = () => {
+    this.setState({ 
+      agree: !this.state.agree 
+    });
   }
 
   // validate fields then add data to database
-  validateInfo = () => {
+  validateInfo = (e) => {
+    e.preventDefault();
     // if all fields have been filled out
-    if (this.state.id && this.state.name && this.state.school) {
+    if (this.state.id && this.state.name && this.state.phone && this.state.school && this.state.year && this.state.parents && this.state.parentPhone && this.state.agree) {
       // get all the students to make sure id is unique
       fire.auth().currentUser.getIdToken(true).then(token => {
         axios.get(`https://teen-center-sign-in.firebaseio.com/students.json?auth=${token}`)
@@ -61,6 +58,11 @@ class Register extends Component {
           })
           .catch(error => console.log(error));
       })
+    } else {
+      console.log('error');
+      this.setState({
+        message: "All fields must be filled out"
+      })
     }
   }
 
@@ -70,6 +72,7 @@ class Register extends Component {
         toggleRegister={this.props.toggleRegister}
         state={this.state}
         updateField={this.updateField}
+        toggleCheckbox={this.toggleCheckbox}
         validateInfo={this.validateInfo} />
     )
   }

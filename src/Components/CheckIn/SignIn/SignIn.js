@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from '../../../utils/axios-signin';
 import fire from '../../../utils/fire';
+import Register from '../Register/Register';
 
 // sign in a student
 class SignIn extends Component {
@@ -14,6 +15,15 @@ class SignIn extends Component {
     this.setState({
       searchTerm: e.target.value
     })
+  }
+
+  // if registration form is shown reset signin input field and potential error message
+  toggleRegister = () => {
+    this.setState({
+      searchTerm: '',
+      message: ''
+    })
+    this.props.toggleRegister();
   }
 
   // check if ID exists in database
@@ -102,17 +112,31 @@ class SignIn extends Component {
   }
 
   render() {
-    return (
+    let signInOrUp = (
       <form>
         <p className="message">{this.state.message}</p>
         <label htmlFor="id">Sign in with your ID:</label>
         <input type="text"
           name="id"
+          className="inline"
           onChange={this.handleTermChange}
           onKeyPress={(e) => this.validateID(e, this.state.searchTerm)}
           placeholder="Student ID"
           value={this.state.searchTerm} />
+        <a onClick={this.toggleRegister}>(or register)</a> {/* eslint-disable-line */}
       </form>
+    );
+    if (this.props.registering) {
+      signInOrUp = (
+        <Register
+          toggleRegister={this.props.toggleRegister}
+          register={this.props.register} />
+      )
+    }
+    return (
+      <React.Fragment>
+        {signInOrUp}
+      </React.Fragment>
     )
   }
 };
