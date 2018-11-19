@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
 import fire from '../../utils/fire';
+import AuthorizeForm from './AuthorizeForm/AuthorizeForm';
 
 // log in to the site
 class Authorize extends Component {
   state = {
     email: '',
     password: '',
-    message: ''
+    errorMessage: ''
   }
 
   // update state with contents of input field
@@ -23,12 +24,13 @@ class Authorize extends Component {
       this.setState({
         email: '',
         password: '',
-        message: ''
+        errorMessage: ''
       })
-    this.props.setAccount(account);
+      // set which account to log in as
+      this.props.setAccount(account);
     }).catch((error) => {
       this.setState({
-        message: error.message
+        errorMessage: error.message
       })
     });
   }
@@ -37,35 +39,18 @@ class Authorize extends Component {
   logout = () => {
     fire.auth().signOut();
   }
-
   
   render() {
-    // show login form or logout link depending on user state
+    // show login form or logout link depending on user login state
     let logInOut = null;
     if (this.props.user) {
-      logInOut = (
-        /* eslint-disable-next-line */ 
-        < a onClick={this.logout}>log out admin</a >
-      )
+      logInOut = <a onClick={this.logout}>log out admin</a> /* eslint-disable-line */
     } else {
       logInOut = (
-        <form>
-          <p className="message">{this.state.message}</p>
-          <input
-            value={this.state.email}
-            onChange={this.handleTermChange}
-            type="email"
-            name="email"
-            placeholder="Admin Email" />
-          <input
-            value={this.state.password}
-            onChange={this.handleTermChange}
-            type="password"
-            name="password"
-            placeholder="Password" />
-          <button type="submit" onClick={(e) => this.login(e, 'student')}>Launch sign in page</button>
-          <button type="submit" onClick={(e) => this.login(e, 'admin')}>Log in as Admin</button>
-        </form>
+        <AuthorizeForm 
+          handleTermChange={this.handleTermChange}
+          state={this.state} 
+          login={this.login} />
       )
     }
 

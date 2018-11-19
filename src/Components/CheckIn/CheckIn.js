@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import SignIn from './SignIn/SignIn';
-import AttendanceList from './AttendanceList/AttendanceList';
 import axios from '../../utils/axios-signin';
 import fire from '../../utils/fire';
+import SignIn from './SignIn/SignIn';
+import AttendanceList from './AttendanceList/AttendanceList';
 
 // shows sign in field, registration form and current attendance log
 class CheckIn extends Component {

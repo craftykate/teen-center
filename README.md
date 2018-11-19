@@ -3,17 +3,18 @@ Check for comments and refactoring
 * ~~App.js~~
 * ~~Layout.js~~
   * ~~Header.js~~
-    * Authorize.js
-  * Footer.js
+    * ~~Authorize.js~~
+      * ~~AuthorizeForm.js~~
+  * ~~Footer.js~~
 * Checkin.js
+  * Signin.js
+    * Register.js
+      * RegisterForm.js
+  * AttendanceList.js
 * Reports.js
+  * StudentInfo.js
+  * SingleDay.js
 
-* AttendanceList.js
-* RegisterForm.js
-* Register.js
-* Signin.js
-* SingleDay.js
-* StudentInfo.js
 * utils:
   * axios-signin.js
   * fire.js
