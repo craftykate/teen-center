@@ -1,9 +1,11 @@
 //*============ TABLES ============*/
 	table {
-		margin: 20px;
+		margin: 20px auto;
+		width: 85%;
 		border-collapse: separate;
 		border-spacing: 0;
 		text-align: center;
+		// color: $text;
 		th, td {
 			padding: 10px 15px;
 			vertical-align: middle;
@@ -15,6 +17,27 @@
 		}
 		thead {
 			font-weight: bold;
+			font-size: .9em;
+			span.heading {
+				font-size: 1.4em;
+			}
+			span.description {
+				font-weight: normal;
+				color: lighten($text, 20%);
+				&.block {
+					display: block;
+					margin-top: 5px;
+				}
+			}
+			th:first-child {
+				width: 56%;
+			}
+			th:nth-child(2) {
+				width: 22%;
+			}
+			th:last-child {
+				width: 22%;
+			}
 			tr {
 				&:first-child {
 					th {
@@ -33,6 +56,10 @@
 			td:first-child {
 				text-align: left;
 				font-weight: bold;
+			}
+			td.info {
+				font-weight: normal;
+				text-align: center;
 			}
 			tr:last-child {
 				td {

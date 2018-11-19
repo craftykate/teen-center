@@ -8,29 +8,36 @@ const attendanceList = (props) => {
     // convert time to readable format
     if (stringTime !== undefined) {
       const time = new Date(stringTime);
-      const hours = time.getHours();
+      let hours = time.getHours();
+      // convert hours to 12 hr format
+      const suffix = hours >= 12 ? "p" : "a"; 
+      hours = ((hours + 11) % 12 + 1);
       // pad minutes with a zero if it's single digit
       const minutes = ("0" + time.getMinutes()).slice(-2);
-      return `${hours}:${minutes}`
+      return `${hours}:${minutes}${suffix}`
     // time is undefined, so they haven't logged out yet, so show log out link
     } else {
-      return (
-        /* eslint-disable-next-line */
-        <a onClick={() => props.signOut(ID)}>sign out</a>)
+      return <a onClick={() => props.signOut(ID)}>sign out</a> /* eslint-disable-line */
     }
   }
 
-  // show no students message if no students have signed in yet
-  let currentStudents = (
-    <tr>
-      <td colSpan="3">No students yet</td>
-    </tr>
-  )
+  // format date for top of attendance list
+  const readableDay = () => {
+    const today = new Date();
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    const formattedDate = {
+      day: days[today.getDay()],
+      month: months[today.getMonth()],
+      date: today.getDate()
+    }
+    return `${formattedDate.day}, ${formattedDate.month} ${formattedDate.date}`
+  }
 
   // display today's students if there are any
+  let currentStudents = [];
   if (props.currentStudents && Object.keys(props.currentStudents).length > 0) {
-    currentStudents = [];
-    for (const studentInfo in props.currentStudents) {
+    for (let studentInfo in props.currentStudents) {
       const student = props.currentStudents[studentInfo];
       currentStudents.push(
         [<tr key={student.id}>
@@ -40,6 +47,13 @@ const attendanceList = (props) => {
         </tr>]
       )
     }
+  // no students signed in
+  } else {
+    currentStudents = (
+      <tr>
+        <td colSpan="3" className="info">No students yet</td>
+      </tr>
+    )
   }
 
   return (
@@ -47,13 +61,12 @@ const attendanceList = (props) => {
       <thead>
         <tr>
           <th colSpan="3">
-            Today's Attendance<br />
-            {/* eslint-disable-next-line */}
-            (<a onClick={props.refreshStudentList}>refresh</a> if you don't see your name)
+            <span className="heading">{readableDay()}</span>
+            <span className="description block">(<a onClick={props.refreshStudentList}>refresh</a> if you don't see your name)</span>{/* eslint-disable-line */}
           </th>
         </tr>
         <tr>
-          <th>Name</th>
+          <th>Name <span className="description">(sorted a-z)</span></th>
           <th>Time In</th>
           <th>Time Out</th>
         </tr>

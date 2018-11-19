@@ -10,7 +10,7 @@ _Check for comments and refactoring_
   * Signin.js
     * ~~Register.js~~
       * ~~RegisterForm.js~~
-  * AttendanceList.js
+  * ~~AttendanceList.js~~
 * Reports.js
   * StudentInfo.js
   * SingleDay.js
@@ -21,15 +21,9 @@ _Check for comments and refactoring_
 * custom.scss
 
 # To Do
-**Register**
-* ~~Totally reformat registration function~~
-* ~~Message and agree are getting posted to database~~
-* ~~Add "Register and sign in now" button~~
-* ~~Some sort of feedback when they register successfully~~
-
 **Checkin**
 * Order attendance list by time in - or by first name? Probably name
-* Change times to 12 hr
+* ~~Change times to 12 hr~~
 
 **Style**
 * Set min-width on wrapper
@@ -46,6 +40,12 @@ _Check for comments and refactoring_
 
 **Login**
 * Add password recovery to admin login (https://firebase.google.com/docs/auth/web/manage-users)
+
+~~**Register**~~
+* ~~Totally reformat registration function~~
+* ~~Message and agree are getting posted to database~~
+* ~~Add "Register and sign in now" button~~
+* ~~Some sort of feedback when they register successfully~~
 
 ## Stories
 **Student Side**
@@ -67,6 +67,7 @@ _Check for comments and refactoring_
 * Admin can look up a student by ID to get their info. Possibly by name too, but that's way down the line
 
 ## Post Development
+* Take out console.logs for database hits
 * Upload to internet
 * Update meta property tags on index.html
 * Move database over to Lynn, make sure to update variables.js. Add myself as a user on database

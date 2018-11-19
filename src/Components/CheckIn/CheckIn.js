@@ -62,8 +62,8 @@ class CheckIn extends Component {
           this.signIn(student, dateInfo, true)
         }
         let msg = signInMethod === 'regAndSignIn' ? 
-          `${studentInfo.name} successfully registered and signed in for today` 
-          : `${studentInfo.name} successfully registered and is NOT signed in for today`;
+          `You successfully registered and signed in for today` 
+          : `You successfully registered and are NOT signed in for today`;
         this.setState({
           successMessage: msg
         })
@@ -131,9 +131,9 @@ class CheckIn extends Component {
     const dateInfo = this.dateInfo();
     // get signed in students
 
-    return axios.get(`https://teen-center-sign-in.firebaseio.com/logs/${dateInfo.year}${dateInfo.month}${dateInfo.day}.json?auth=${token}`)
+    return axios.get(`/logs/${dateInfo.year}${dateInfo.month}${dateInfo.day}.json?auth=${token}`)
       .then(currentStudents => {
-        console.log(`getting checked-in students ${currentStudents.data}`)
+        console.log(`getting checked-in students`)
         // if there are students signed in
         if (currentStudents.data) {
           return currentStudents.data
@@ -143,6 +143,8 @@ class CheckIn extends Component {
       })
       .catch(error => console.log(error))
   }
+
+  
 
   // refresh link to refresh student list if there are multiple screens open
   refreshStudentList = () => {
@@ -167,6 +169,15 @@ class CheckIn extends Component {
     }
   }
 
+  sortedStudents = () => {
+    const students = this.state.currentStudents
+    // turn object of student objects into array of student objects
+    let studentArray = Object.keys(students).map(key => students[key]);
+    // sort array of student objects by name
+    studentArray.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
+    return studentArray
+  }
+
   render() {
     return (
       <React.Fragment>
@@ -181,7 +192,7 @@ class CheckIn extends Component {
 
         {!this.state.registering ? 
           <AttendanceList 
-            currentStudents={this.state.currentStudents}
+            currentStudents={this.sortedStudents()}
             refreshStudentList={this.refreshStudentList} 
             signOut={this.signOut} />
         : null}
