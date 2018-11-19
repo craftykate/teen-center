@@ -1,25 +1,26 @@
 import React, {Component} from 'react';
 import axios from '../../utils/axios-signin';
 import fire from '../../utils/fire';
+import utilities from '../../utils/utilities';
 import SignIn from './SignIn/SignIn';
 import AttendanceList from './AttendanceList/AttendanceList';
 
-// shows sign in field, registration form and current attendance log
+// shows sign in field, registration form and current attendance log - student-facing stuff
 class CheckIn extends Component {
   state = {
     registering: false, // whether student is registering
-    currentStudents: [] // students who signed in today
+    currentStudents: [], // students who signed in today
+    successMessage: ''
   }
 
   // get list of today's students when component mounts
   componentWillMount() {
-    fire.auth().currentUser.getIdToken(true).then(token => {
-      this.getCurrentStudents(token)
-        .then(currentStudents => {
-          this.setState({
-            currentStudents: currentStudents
-          })
+    utilities.getToken().then(token => {
+      this.getCurrentStudents(token).then(currentStudents => {
+        this.setState({ 
+          currentStudents
         })
+      })
     })
   }
 
@@ -28,28 +29,48 @@ class CheckIn extends Component {
     return fire.auth().currentUser.getIdToken(true)
   }
 
-  // toggle wether registration form is visible
+  // toggle whether registration form is visible
   toggleRegister = () => {
-    const currentState = this.state.registering;
     this.setState({
-      registering: !currentState
+      registering: !this.state.registering
     })
   }
 
   // upload student info to database
-  registerStudent = (studentInfo) => {
+  registerStudent = (studentInfo, signInMethod) => {
     // hide registration form
     this.setState({
       registering: false
     })
-
     // post student data to database
-    this.getToken().then(token => {
-      axios.put(`/students/id-${studentInfo.id}.json?auth=${token}`, studentInfo)
-        .then(response => {
-          console.log(`registering student ${response}`)
+    utilities.getToken().then(token => {
+      axios.put(`/students/id-${studentInfo.id}.json?auth=${token}`, studentInfo).then(response => {
+        console.log(`registering student`);
+        console.log(response);
+        if (signInMethod === 'regAndSignIn') {
+          const student = {
+            id: studentInfo.id,
+            name: studentInfo.name
+          }
+          const now = new Date();
+          const dateInfo = {
+            timeIn: now,
+            year: now.getFullYear(),
+            month: now.getMonth(),
+            day: now.getDate()
+          }
+          this.signIn(student, dateInfo, true)
+        }
+        let msg = signInMethod === 'regAndSignIn' ? 
+          `${studentInfo.name} successfully registered and signed in for today` 
+          : `${studentInfo.name} successfully registered and is NOT signed in for today`;
+        this.setState({
+          successMessage: msg
         })
-        .catch(error => console.log(error));
+        setTimeout(() => {
+          this.setState({ successMessage: '' });
+        }, 5000);
+      }).catch(error => console.log(error));
     })
   }
 
@@ -155,7 +176,8 @@ class CheckIn extends Component {
           signIn={this.signIn}
           registering={this.state.registering}
           toggleRegister={this.toggleRegister}
-          register={this.registerStudent} />
+          register={this.registerStudent}
+          successMessage={this.state.successMessage} />
 
         {!this.state.registering ? 
           <AttendanceList 

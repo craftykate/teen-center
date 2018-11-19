@@ -77,7 +77,7 @@ form {
 		transition: all .25s;
 		@include round(5px);
 	}
-	input {
+	input:not([type="checkbox"]) {
 		border: 1px solid lighten(gray, 30%);
 		width: 50%;
 		&:focus {
@@ -89,7 +89,12 @@ form {
 	}
 	input[type="checkbox"] {
 		display: inline-block;
-		width: 20px;
+		margin-bottom: 15px;
+	}
+	span.checkbox-text {
+		display: inline-block;
+		font-size: .9em;
+		transform: translate(0, 1px);
 	}
 	input.inline {
 		display: inline;
@@ -103,6 +108,10 @@ form {
 	p.message {
 		color: red;
 		margin-bottom: 5px;
+		&.flash {
+			position: absolute;
+			transform: translate(0, -5px)
+		}
 	}
 	button {
 		display: inline;

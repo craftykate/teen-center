@@ -4,7 +4,7 @@ import React from 'react';
 const registerForm = (props) => (
   <form>
     <h2>Register New Student</h2>
-    <p className="message">{props.state.message}</p>
+    <p className="message">{props.state.errorMessage}</p>
     <label htmlFor="id">Careful - your ID can't be changed!</label>
     <input type="text"
       name="id"
@@ -45,11 +45,11 @@ const registerForm = (props) => (
     <input 
       type="checkbox" 
       value={props.state.agree} 
-      onChange={props.toggleCheckbox}/>I have received the rules for the Benicia Teen Center and agree to follow them <br/><br/>
+      onChange={props.toggleCheckbox} /><span className="checkbox-text">I have received the rules for the Benicia Teen Center and agree to follow them</span><br/>
 
-    <button onClick={props.validateInfo}>Register</button>
-    {/* eslint-disable-next-line */}
-    <a onClick={props.toggleRegister}>(cancel)</a>
+    <button onClick={(e) => props.validateInfo(e, 'regOnly')}>Register Only</button>
+    <button onClick={(e) => props.validateInfo(e, 'regAndSignIn')}>Register and Sign In</button>
+    <a onClick={props.toggleRegister}>(cancel)</a> {/* eslint-disable-line */}
   </form>
 );
 

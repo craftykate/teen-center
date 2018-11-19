@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import RegisterForm from './RegisterForm/RegisterForm';
+import React, {Component} from 'react';
 import axios from '../../../utils/axios-signin';
-import fire from '../../../utils/fire';
+import utilities from '../../../utils/utilities';
+import RegisterForm from './RegisterForm/RegisterForm';
 
 // register a new student 
 class Register extends Component {
@@ -14,7 +14,7 @@ class Register extends Component {
     parents: '',
     parentPhone: '',
     agree: false,
-    message: ''
+    errorMessage: ''
   }
 
   // update the correct state field with whatever has been typed in
@@ -24,6 +24,7 @@ class Register extends Component {
     })
   }
 
+  // toggle state of 
   toggleCheckbox = () => {
     this.setState({ 
       agree: !this.state.agree 
@@ -31,38 +32,39 @@ class Register extends Component {
   }
 
   // validate fields then add data to database
-  validateInfo = (e) => {
+  validateInfo = (e, signInMethod) => {
     e.preventDefault();
     // if all fields have been filled out
     if (this.state.id && this.state.name && this.state.phone && this.state.school && this.state.year && this.state.parents && this.state.parentPhone && this.state.agree) {
-      // get all the students to make sure id is unique
-      fire.auth().currentUser.getIdToken(true).then(token => {
-        axios.get(`https://teen-center-sign-in.firebaseio.com/students.json?auth=${token}`)
-          .then(students => {
-            console.log(`getting all students ${students.data}`)
-            // if there are students in database make sure id is unique
-            if (students.data) {
-              // turn keys of ids into an array
-              const ids = Object.keys(students.data);
-              // if id is unique, register student
-              if (!ids.includes(`id-${this.state.id}`)) {
-                this.props.register(this.state);
-              // id isn't unique
-              } else {
-                console.log('id exists')
-              }
-            // no students yet, so just upload data
+      // take out irrelevant fields
+      const student = { ...this.state };
+      delete student.errorMessage;
+      delete student.agree;
+      // authorize user
+      utilities.getToken().then(token => {
+        // get all the students to make sure id is unique
+        axios.get(`/students.json?auth=${token}`).then(students => {
+          console.log(`getting all students`)
+          // if there are students in database make sure id is unique
+          if (students.data) {
+            // turn keys of ids into an array
+            const ids = Object.keys(students.data);
+            // if id is unique, register student
+            if (!ids.includes(`id-${this.state.id}`)) {
+              this.props.register(student, signInMethod);
+            // id isn't unique
             } else {
-              this.props.register(this.state);
+              this.setState({ errorMessage: "That ID has already been registered" })
             }
-          })
-          .catch(error => console.log(error));
-      })
+          // no students yet, so just upload data
+          } else {
+            this.props.register(student, signInMethod);
+          }
+        }).catch(error => this.setState({ errorMessage: error.message })); // something happened getting data
+      }).catch(error => this.setState({ errorMessage: error.message })); // something happened verifying user
+    // all fields weren't filled out
     } else {
-      console.log('error');
-      this.setState({
-        message: "All fields must be filled out"
-      })
+      this.setState({ errorMessage: "All fields must be filled out" })
     }
   }
 

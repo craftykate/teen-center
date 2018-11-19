@@ -124,6 +124,7 @@ class SignIn extends Component {
           placeholder="Student ID"
           value={this.state.searchTerm} />
         <a onClick={this.toggleRegister}>(or register)</a> {/* eslint-disable-line */}
+        <p className="flash message">{this.props.successMessage}</p>
       </form>
     );
     if (this.props.registering) {
