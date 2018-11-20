@@ -6,7 +6,9 @@ const header = (props) => (
     <h1>Benicia Teen Center</h1>
     <Authorize 
       user={props.user} 
-      setAccount={props.setAccount} />
+      setAccount={props.setAccount}
+      setMessage={props.setMessage} />
+    <p className="message">{props.message}</p>
   </header>
 );
 

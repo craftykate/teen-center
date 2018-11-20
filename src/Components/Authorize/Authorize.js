@@ -6,8 +6,7 @@ import AuthorizeForm from './AuthorizeForm/AuthorizeForm';
 class Authorize extends Component {
   state = {
     email: '',
-    password: '',
-    errorMessage: ''
+    password: ''
   }
 
   // update state with contents of input field
@@ -23,16 +22,11 @@ class Authorize extends Component {
     fire.auth().signInWithEmailAndPassword(this.state.email, this.state.password).then((u) => {
       this.setState({
         email: '',
-        password: '',
-        errorMessage: ''
+        password: ''
       })
       // set which account to log in as
       this.props.setAccount(account);
-    }).catch((error) => {
-      this.setState({
-        errorMessage: error.message
-      })
-    });
+    }).catch((error) => { this.props.setMessage(error.message)});
   }
 
   // log user out

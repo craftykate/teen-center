@@ -8,7 +8,8 @@ import Reports from '../Reports/Reports';
 class App extends Component {
   state = {
     user: null,
-    account: ''
+    account: '',
+    message: ''
   };
 
   // listen if user logs in
@@ -38,15 +39,24 @@ class App extends Component {
 
   // set state for admin or student account
   setAccount = (account) => {
-    this.setState({ account })
+    this.setState({ 
+      account,
+      message: '' 
+    })
     localStorage.setItem('account', account);
+  }
+
+  setMessage = (message) => {
+    this.setState({
+      message
+    })
   }
 
   render() {
     // show logged in content only if logged in, otherwise show login form
     let content = null;
     if (this.state.account === 'student') {
-      content = <CheckIn />;
+      content = <CheckIn setMessage={this.setMessage} />;
     } else if (this.state.account === 'admin') {
       content = <Reports />;
     } 
@@ -54,7 +64,9 @@ class App extends Component {
     return (
       <Layout 
         user={this.state.user}
-        setAccount={this.setAccount} >
+        setAccount={this.setAccount}
+        setMessage={this.setMessage}
+        message={this.state.message} >
         {content}
       </Layout>
     );
