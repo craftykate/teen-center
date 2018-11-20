@@ -8,7 +8,7 @@ _Check for comments and refactoring_
       * ~~AuthorizeForm.js~~
   * ~~Footer.js~~
 * Checkin.js
-  * Signin.js
+  * ~~Signin.js~~
     * ~~Register.js~~
       * ~~RegisterForm.js~~
   * AttendanceList.js

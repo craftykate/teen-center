@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import axios from '../../utils/axios-signin';
+import axios from '../../utils/axios';
 import fire from '../../utils/fire';
 import utilities from '../../utils/utilities';
 import SignIn from './SignIn/SignIn';
@@ -80,7 +80,7 @@ class CheckIn extends Component {
     this.props.setMessage('');
     // add student to attendance log for the day
     // add timeIn to student info object for attendance log
-    student.timeIn = dateInfo.timeIn;
+    student.timeIn = dateInfo.now;
     // add student info to today's attendance log
     this.getToken().then(token => {
       axios.put(`/logs/${dateInfo.year}${dateInfo.month}${dateInfo.day}/id-${student.id}.json?auth=${token}`, student)

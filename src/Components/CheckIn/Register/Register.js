@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import axios from '../../../utils/axios-signin';
+import axios from '../../../utils/axios';
 import utilities from '../../../utils/utilities';
 import RegisterForm from './RegisterForm/RegisterForm';
 

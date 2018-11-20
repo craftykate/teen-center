@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import fire from '../../../utils/fire';
-import axios from '../../../utils/axios-signin';
+import axios from '../../../utils/axios';
 
 class SingleDay extends Component {
   state = {
