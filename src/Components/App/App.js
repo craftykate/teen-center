@@ -50,7 +50,7 @@ class App extends Component {
 
   // app-wide error and success message
   setMessage = (message) => {
-    console.log('set message');
+    console.log('set message')
     this.setState({ message });
   }
 
@@ -71,8 +71,8 @@ class App extends Component {
       <Layout 
         user={this.state.user}
         setAccount={this.setAccount}
-        setMessage={this.setMessage}
-        message={this.state.message} >
+        message={this.state.message}
+        setMessage={this.setMessage} >
         {content}
       </Layout>
     );

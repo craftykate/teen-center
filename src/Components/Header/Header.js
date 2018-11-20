@@ -7,6 +7,7 @@ const header = (props) => (
     <Authorize 
       user={props.user} 
       setAccount={props.setAccount}
+      message={props.message}
       setMessage={props.setMessage} />
     <p className="message">{props.message}</p>
   </header>

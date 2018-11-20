@@ -1,16 +1,16 @@
 # Pages
 
 _Check for comments and refactoring_
-* App.js
-* Layout.js
-  * Header.js
-    * Authorize.js
-      * AuthorizeForm.js
-  * Footer.js
+* ~~App.js~~
+* ~~Layout.js~~
+  * ~~Header.js~~
+    * ~~Authorize.js~~
+      * ~~AuthorizeForm.js~~
+  * ~~Footer.js~~
 * Checkin.js
   * Signin.js
-    * Register.js
-      * RegisterForm.js
+    * ~~Register.js~~
+      * ~~RegisterForm.js~~
   * AttendanceList.js
 * Reports.js
   * StudentInfo.js

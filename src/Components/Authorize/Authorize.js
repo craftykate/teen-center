@@ -14,7 +14,7 @@ class Authorize extends Component {
     this.setState({
       [e.target.name]: e.target.value
     })
-    this.props.setMessage('');
+    if (this.props.message) this.props.setMessage(''); // reset error message if there was one
   }
 
   // log in with form data
@@ -33,6 +33,7 @@ class Authorize extends Component {
   // log user out
   logout = () => {
     fire.auth().signOut();
+    if (this.props.message) this.props.setMessage('');
   }
   
   render() {

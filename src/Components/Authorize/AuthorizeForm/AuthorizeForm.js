@@ -3,7 +3,6 @@ import React from 'react';
 // log in form
 const authorizeForm = (props) => (
   <form>
-    <p className="message">{props.state.errorMessage}</p>
     <input
       value={props.state.email}
       onChange={props.handleTermChange}

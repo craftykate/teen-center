@@ -7,8 +7,8 @@ const layout = (props) => (
     <Header 
       user={props.user}
       setAccount={props.setAccount}
-      setMessage={props.setMessage}
-      message={props.message} />
+      message={props.message}
+      setMessage={props.setMessage} />
     <main>
       {props.children}
     </main>
