@@ -14,10 +14,10 @@ const attendanceList = (props) => {
       hours = ((hours + 11) % 12 + 1);
       // pad minutes with a zero if it's single digit
       const minutes = ("0" + time.getMinutes()).slice(-2);
-      return `${hours}:${minutes}${suffix}`
+      return `${hours}:${minutes}${suffix}`;
     // time is undefined, so they haven't logged out yet, so show log out link
     } else {
-      return <a onClick={() => props.signOut(ID)}>sign out</a> /* eslint-disable-line */
+      return <a onClick={() => props.signOut(ID)}>sign out</a>; /* eslint-disable-line */
     }
   }
 
@@ -31,12 +31,13 @@ const attendanceList = (props) => {
       month: months[today.getMonth()],
       date: today.getDate()
     }
-    return `${formattedDate.day}, ${formattedDate.month} ${formattedDate.date}`
+    return `${formattedDate.day}, ${formattedDate.month} ${formattedDate.date}`;
   }
 
   // display today's students if there are any
   let currentStudents = [];
   if (props.currentStudents && Object.keys(props.currentStudents).length > 0) {
+    // loop through current students and push table row of data into an array
     for (let studentInfo in props.currentStudents) {
       const student = props.currentStudents[studentInfo];
       currentStudents.push(
