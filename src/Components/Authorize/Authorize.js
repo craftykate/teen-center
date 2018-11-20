@@ -14,6 +14,7 @@ class Authorize extends Component {
     this.setState({
       [e.target.name]: e.target.value
     })
+    this.props.setMessage('');
   }
 
   // log in with form data

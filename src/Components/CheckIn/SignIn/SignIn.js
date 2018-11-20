@@ -6,8 +6,7 @@ import Register from '../Register/Register';
 // sign in a student
 class SignIn extends Component {
   state = {
-    searchTerm: '',
-    message: ''
+    searchTerm: ''
   }
 
   // update state with contents of input field
@@ -15,13 +14,13 @@ class SignIn extends Component {
     this.setState({
       searchTerm: e.target.value
     })
+    if (this.props.message) this.props.setMessage('');
   }
 
   // if registration form is shown reset signin input field and potential error message
   toggleRegister = () => {
     this.setState({
-      searchTerm: '',
-      message: ''
+      searchTerm: ''
     })
     this.props.toggleRegister();
   }
@@ -66,9 +65,7 @@ class SignIn extends Component {
                       if (!ids.includes(`id-${ID}`)) {
                         this.sendSignInInfo(students.data[`id-${ID}`], dateInfo);
                       } else {
-                        this.setState({
-                          message: "That student ID has already signed in today"
-                        })
+                        this.props.setMessage("That student ID has already signed in today");
                       }
                       // no students signed in, so just sign in
                     } else {
@@ -78,15 +75,11 @@ class SignIn extends Component {
                   .catch(error => console.log(error))
                 // id does not exist in database
               } else {
-                this.setState({
-                  message: "That student ID is not registered yet"
-                })
+                this.props.setMessage("That student ID is not registered yet");
               }
               // no students records, so student doesn't exists
             } else {
-              this.setState({
-                message: "That student ID is not registered yet"
-              })
+              this.props.setMessage("That student ID is not registered yet");
             }
           })
           .catch(error => console.log(error));
@@ -98,8 +91,7 @@ class SignIn extends Component {
   sendSignInInfo = (student, dateInfo) => {
     // reset search field
     this.setState({
-      searchTerm: '',
-      message: ''
+      searchTerm: ''
     });
     // send along name and id of student
     const currentStudent = { ...student }
@@ -114,8 +106,6 @@ class SignIn extends Component {
   render() {
     let signInOrUp = (
       <form autoComplete="off">
-        <p className="message">{this.state.message}</p>
-        {/* <label htmlFor="id">Sign in with your ID:</label> */}
         <input type="text"
           name="id"
           className="inline"
@@ -124,14 +114,14 @@ class SignIn extends Component {
           placeholder="Sign in with your student ID"
           value={this.state.searchTerm} />
         <a onClick={this.toggleRegister}>(or register)</a> {/* eslint-disable-line */}
-        <p className="flash message">{this.props.successMessage}</p>
       </form>
     );
     if (this.props.registering) {
       signInOrUp = (
         <Register
           toggleRegister={this.props.toggleRegister}
-          register={this.props.register} />
+          register={this.props.register}
+          setMessage={this.props.setMessage} />
       )
     }
     return (

@@ -4,7 +4,6 @@ import React from 'react';
 const registerForm = (props) => (
   <form autoComplete="off">
     <h2>Register New Student</h2>
-    <p className="message">{props.state.errorMessage}</p>
     <label htmlFor="id">Careful - your ID can't be changed!</label>
     <input type="text"
       name="id"

@@ -13,8 +13,7 @@ class Register extends Component {
     year: '',
     parents: '',
     parentPhone: '',
-    agree: false,
-    errorMessage: ''
+    agree: false
   }
 
   // update the correct state field with whatever has been typed in
@@ -38,7 +37,6 @@ class Register extends Component {
     if (this.state.id && this.state.name && this.state.phone && this.state.school && this.state.year && this.state.parents && this.state.parentPhone && this.state.agree) {
       // take out irrelevant fields
       const student = { ...this.state };
-      delete student.errorMessage;
       delete student.agree;
       // authorize user
       utilities.getToken().then(token => {
@@ -54,17 +52,17 @@ class Register extends Component {
               this.props.register(student, signInMethod);
             // id isn't unique
             } else {
-              this.setState({ errorMessage: "That ID has already been registered" })
+              this.props.setMessage("That ID has already been registered")
             }
           // no students yet, so just upload data
           } else {
             this.props.register(student, signInMethod);
           }
-        }).catch(error => this.setState({ errorMessage: error.message })); // something happened getting data
-      }).catch(error => this.setState({ errorMessage: error.message })); // something happened verifying user
+        }).catch(error => this.props.setMessage(error.message)); // something happened getting data
+      }).catch(error => this.props.setMessage(error.message)); // something happened verifying user
     // all fields weren't filled out
     } else {
-      this.setState({ errorMessage: "All fields must be filled out" })
+      this.props.setMessage("All fields must be filled out")
     }
   }
 

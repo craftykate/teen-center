@@ -1,17 +1,17 @@
 # Pages
 
 _Check for comments and refactoring_
-* ~~App.js~~
-* ~~Layout.js~~
-  * ~~Header.js~~
-    * ~~Authorize.js~~
-      * ~~AuthorizeForm.js~~
-  * ~~Footer.js~~
+* App.js
+* Layout.js
+  * Header.js
+    * Authorize.js
+      * AuthorizeForm.js
+  * Footer.js
 * Checkin.js
   * Signin.js
-    * ~~Register.js~~
-      * ~~RegisterForm.js~~
-  * ~~AttendanceList.js~~
+    * Register.js
+      * RegisterForm.js
+  * AttendanceList.js
 * Reports.js
   * StudentInfo.js
   * SingleDay.js
@@ -22,7 +22,6 @@ _Check for comments and refactoring_
 * custom.scss
 
 # To Do
-* Move messages to their own fixed spot
 
 **Checkin**
 * ~~Order attendance list by time in - or by first name? Probably name~~
@@ -34,6 +33,7 @@ _Check for comments and refactoring_
 * Change favicon
 
 **General Site**
+* ~~Move messages to their own fixed spot~~
 * Focus cursor in fields
 * Which firebase modules do i need?
 * Build one place for all error/success messages

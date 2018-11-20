@@ -7,9 +7,9 @@ import Reports from '../Reports/Reports';
 
 class App extends Component {
   state = {
-    user: null,
-    account: '',
-    message: ''
+    user: null, // signed in admin info
+    account: '', // student or admin controls
+    message: '' // app-wide place for error and success messages
   };
 
   // listen if user logs in
@@ -23,13 +23,15 @@ class App extends Component {
       if (user) {
         this.setState({ 
           user,
-          account: localStorage.getItem('account')
+          account: localStorage.getItem('account'),
+          message: ''
         });
         localStorage.setItem('user', user.uid);
       } else {
         this.setState({ 
           user: null,
-          account: ''
+          account: '',
+          message: ''
         });
         localStorage.removeItem('user');
         localStorage.removeItem('account');
@@ -46,17 +48,21 @@ class App extends Component {
     localStorage.setItem('account', account);
   }
 
+  // app-wide error and success message
   setMessage = (message) => {
-    this.setState({
-      message
-    })
+    console.log('set message');
+    this.setState({ message });
   }
 
   render() {
     // show logged in content only if logged in, otherwise show login form
     let content = null;
     if (this.state.account === 'student') {
-      content = <CheckIn setMessage={this.setMessage} />;
+      content = (
+        <CheckIn 
+          message={this.state.message}
+          setMessage={this.setMessage} />
+      );
     } else if (this.state.account === 'admin') {
       content = <Reports />;
     } 

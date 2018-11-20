@@ -9,8 +9,7 @@ import AttendanceList from './AttendanceList/AttendanceList';
 class CheckIn extends Component {
   state = {
     registering: false, // whether student is registering
-    currentStudents: [], // students who signed in today
-    successMessage: ''
+    currentStudents: [] // students who signed in today
   }
 
   // get list of today's students when component mounts
@@ -34,6 +33,7 @@ class CheckIn extends Component {
     this.setState({
       registering: !this.state.registering
     })
+    this.props.setMessage('')
   }
 
   // upload student info to database
@@ -41,7 +41,9 @@ class CheckIn extends Component {
     // hide registration form
     this.setState({
       registering: false
-    })
+    });
+    // hide any potential error message
+    this.props.setMessage('');
     // post student data to database
     utilities.getToken().then(token => {
       axios.put(`/students/id-${studentInfo.id}.json?auth=${token}`, studentInfo).then(response => {
@@ -64,11 +66,9 @@ class CheckIn extends Component {
         let msg = signInMethod === 'regAndSignIn' ? 
           `You successfully registered and signed in for today` 
           : `You successfully registered and are NOT signed in for today`;
-        this.setState({
-          successMessage: msg
-        })
+        this.props.setMessage(msg);
         setTimeout(() => {
-          this.setState({ successMessage: '' });
+          this.props.setMessage('');
         }, 5000);
       }).catch(error => console.log(error));
     })
@@ -76,6 +76,8 @@ class CheckIn extends Component {
 
   // sign a student in for the day
   signIn = (student, dateInfo) => {
+    // reset potential error message
+    this.props.setMessage('');
     // add student to attendance log for the day
     // add timeIn to student info object for attendance log
     student.timeIn = dateInfo.timeIn;
@@ -188,7 +190,8 @@ class CheckIn extends Component {
           registering={this.state.registering}
           toggleRegister={this.toggleRegister}
           register={this.registerStudent}
-          successMessage={this.state.successMessage} />
+          message={this.props.message}
+          setMessage={this.props.setMessage} />
 
         {!this.state.registering ? 
           <AttendanceList 

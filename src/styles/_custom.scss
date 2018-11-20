@@ -30,36 +30,11 @@
 		color: $main;
 		border-bottom: 1px solid $main;
 		h1 {
-			// margin-bottom: 10px;
 			font-size: 3em;
 		}
 		p.message {
 			position: absolute;
 			transform: translate(0, 15px);
-		}
-		ul {
-			position: relative;
-			margin-top: 7px;
-			li {
-				display: inline;
-				a {
-					color: $text;
-					text-decoration: none;
-					&:hover {
-						text-decoration: none;
-						color: $accent;
-					}
-					&.active {
-						color: $main;
-					}
-				}
-				&:not(:first-child) {
-					&::before {
-						content: " | ";
-						color: $text;
-					}
-				}
-			}
 		}
 	}
 //*============ END HEADER ============*/
@@ -109,15 +84,6 @@ form {
 		display: block;
 		margin-bottom: 5px;
 		color: $text;
-	}
-	p.message {
-		position: absolute;
-		color: red;
-		transform: translate(0, -20px);
-		&.flash {
-			// position: absolute;
-			transform: translate(0, -3px);
-		}
 	}
 	button {
 		display: inline;
