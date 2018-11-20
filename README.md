@@ -27,6 +27,7 @@ _Check for comments and refactoring_
 * ~~Order attendance list by time in - or by first name? Probably name~~
 * ~~Change times to 12 hr~~
 * Make sure starting a new day erases attendance list
+* Clicking a signed out time will un-sign them out, in case of mistake
 
 **Style**
 * Set min-width on wrapper

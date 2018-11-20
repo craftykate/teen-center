@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import axios from '../../utils/axios';
-import fire from '../../utils/fire';
 import utilities from '../../utils/utilities';
 import SignIn from './SignIn/SignIn';
 import AttendanceList from './AttendanceList/AttendanceList';
@@ -14,62 +13,48 @@ class CheckIn extends Component {
 
   // get list of today's students when component mounts
   componentWillMount() {
-    utilities.getToken().then(token => {
-      this.getCurrentStudents(token).then(currentStudents => {
-        this.setState({ 
-          currentStudents
-        })
-      })
-    })
-  }
-
-  // get user's token to access database
-  getToken = () => {
-    return fire.auth().currentUser.getIdToken(true)
+    this.refreshStudentList();
   }
 
   // toggle whether registration form is visible
   toggleRegister = () => {
-    this.setState({
-      registering: !this.state.registering
-    })
-    this.props.setMessage('')
+    this.setState({ registering: !this.state.registering })
+    if (this.props.message) this.props.setMessage('');
   }
 
   // upload student info to database
   registerStudent = (studentInfo, signInMethod) => {
-    // hide registration form
-    this.setState({
-      registering: false
-    });
     // hide any potential error message
-    this.props.setMessage('');
-    // post student data to database
+    if (this.props.message) this.props.setMessage('');
     utilities.getToken().then(token => {
+      // post student data to database
       axios.put(`/students/id-${studentInfo.id}.json?auth=${token}`, studentInfo).then(response => {
         console.log(`registering student`);
-        console.log(response);
-        if (signInMethod === 'regAndSignIn') {
-          const student = {
-            id: studentInfo.id,
-            name: studentInfo.name
+        // student data posted successfully
+        if (response.status === 200) {
+          // hide registration form
+          this.setState({ registering: false });
+          // sign them in, if needed
+          if (signInMethod === 'regAndSignIn') {
+            const student = {
+              id: studentInfo.id,
+              name: studentInfo.name
+            };
+            const dateInfo = utilities.getDateInfo(new Date());
+            this.signIn(student, dateInfo);
+            // set success message
+            let msg = signInMethod === 'regAndSignIn' ?
+              `You successfully registered and signed in for today`
+              : `You successfully registered and are NOT signed in for today`;
+            this.props.setMessage(msg);
+            setTimeout(() => {
+              this.props.setMessage('');
+            }, 5000);
           }
-          const now = new Date();
-          const dateInfo = {
-            timeIn: now,
-            year: now.getFullYear(),
-            month: now.getMonth(),
-            day: now.getDate()
-          }
-          this.signIn(student, dateInfo, true)
+        // error signing in
+        } else {
+          this.props.setMessage('Oops, there was an error with the database, try again');
         }
-        let msg = signInMethod === 'regAndSignIn' ? 
-          `You successfully registered and signed in for today` 
-          : `You successfully registered and are NOT signed in for today`;
-        this.props.setMessage(msg);
-        setTimeout(() => {
-          this.props.setMessage('');
-        }, 5000);
       }).catch(error => console.log(error));
     })
   }
@@ -77,113 +62,100 @@ class CheckIn extends Component {
   // sign a student in for the day
   signIn = (student, dateInfo) => {
     // reset potential error message
-    this.props.setMessage('');
-    // add student to attendance log for the day
+    if (this.props.message) this.props.setMessage('');
     // add timeIn to student info object for attendance log
     student.timeIn = dateInfo.now;
-    // add student info to today's attendance log
-    this.getToken().then(token => {
-      axios.put(`/logs/${dateInfo.year}${dateInfo.month}${dateInfo.day}/id-${student.id}.json?auth=${token}`, student)
-        .then(response => {
-          console.log(`signing in student ${response}`)
-          // if student successfully signed in, update state with current student
-          // (since response = 200 I can update state instead of hitting database for current info)
-          if (response.status === 200) {
-            const updatedStudents = {...this.state.currentStudents};
-            updatedStudents[`id-${student.id}`] = student;
-            this.setState({
-              currentStudents: updatedStudents,
-              registering: false
-            })
-          } else {
-            console.log('error signing in')
-          }
-        })
-        .catch(error => console.log(error));
+    utilities.getToken().then(token => {
+      // add student info to today's attendance log
+      const link = `/logs/${dateInfo.year}${dateInfo.month}${dateInfo.day}/id-${student.id}.json`;
+      axios.put(`${link}?auth=${token}`, student).then(response => {
+        console.log(`signing in student`);
+        // if student successfully signed in, update state with current student
+        // (since response = 200 I can update state instead of hitting database for current info)
+        if (response.status === 200) {
+          const updatedStudents = {...this.state.currentStudents};
+          updatedStudents[`id-${student.id}`] = student;
+          this.setState({
+            currentStudents: updatedStudents,
+            registering: false
+          })
+        } else {
+          this.props.setMessage('Oops, there was an error signing in, try again');
+        }
+      }).catch(error => console.log(error));
     })
 
   }
 
   // sign student out
   signOut = (ID) => {
-    const dateInfo = this.dateInfo();
-    // add sign out time to database
-    this.getToken().then(token => {
-      axios.put(`/logs/${dateInfo.year}${dateInfo.month}${dateInfo.day}/id-${ID}/timeOut.json?auth=${token}`, dateInfo.now)
-        // if student successfully signed out, update state with sign out time
-        .then(response => {
-          console.log(`signing out student ${response}`)
-          if (response.status === 200) {
-            const currentStudents = {...this.state.currentStudents};
-            currentStudents[`id-${ID}`].timeOut = dateInfo.now;
-            this.setState({
-              currentStudents: currentStudents
-            })
-          } else {
-            console.log('error signing out')
-          }
-        })
-        .catch(error => console.log(error))
+    const dateInfo = utilities.getDateInfo(new Date());
+    utilities.getToken().then(token => {
+      // check if student is logged in for the day (not old data)
+      utilities.doesIDExist(token, `/logs/${dateInfo.year}${dateInfo.month}${dateInfo.day}.json`, ID).then(signedIn => {
+        // good data, so sign them out
+        if (signedIn) {
+          const link = `/logs/${dateInfo.year}${dateInfo.month}${dateInfo.day}/id-${ID}/timeOut.json`;
+          axios.put(`${link}?auth=${token}`, dateInfo.now).then(response => {
+            console.log(`signing out student`);
+            // also sign them out in state object
+            if (response.status === 200) {
+              const currentStudents = {...this.state.currentStudents};
+              currentStudents[`id-${ID}`].timeOut = dateInfo.now;
+              this.setState({ currentStudents: currentStudents })
+            } else {
+              this.props.setMessage('Oops, there was an error signing out, try again');
+            }
+          })
+        // old data, so refresh attendance list
+        } else {
+          this.getCurrentStudents(token).then(currentStudents => {
+            this.setState({ currentStudents });
+            this.props.setMessage('There was a problem, here\'s a current list of students signed in');
+            setTimeout(() => {
+              this.props.setMessage('');
+            }, 5000);
+          }).catch(error => console.log(error))
+        }
+      }).catch(error => console.log(error))
     })
   }
 
   // get list of currently signed in students
   getCurrentStudents = (token) => {
     // get info about today's date
-    const dateInfo = this.dateInfo();
+    const dateInfo = utilities.getDateInfo(new Date());
     // get signed in students
-
-    return axios.get(`/logs/${dateInfo.year}${dateInfo.month}${dateInfo.day}.json?auth=${token}`)
-      .then(currentStudents => {
-        console.log(`getting checked-in students`)
-        // if there are students signed in
-        if (currentStudents.data) {
-          return currentStudents.data
-        } else {
-          return {}
-        }
-      })
-      .catch(error => console.log(error))
+    const link = `/logs/${dateInfo.year}${dateInfo.month}${dateInfo.day}.json`;
+    return axios.get(`${link}?auth=${token}`).then(currentStudents => {
+      console.log(`getting checked-in students`)
+      // return checked in students 
+      return currentStudents.data ? currentStudents.data : {};
+    }).catch(error => console.log(error.message))
   }
 
-  
-
-  // refresh link to refresh student list if there are multiple screens open
+  // get current list of students signed in for the day
   refreshStudentList = () => {
-    this.getToken().then(token => {
-      this.getCurrentStudents(token)
-      .then(currentStudents => {
-        this.setState({
-          currentStudents
-        })
-      })
-    })
+    utilities.getToken().then(token => {
+      this.getCurrentStudents(token).then(currentStudents => {
+        this.setState({ currentStudents });
+      }).catch(error => console.log(error));
+    }).catch(error => console.log(error));
   }
 
-  // reusable date info for signing in and out
-  dateInfo = () => {
-    const now = new Date();
-    return {
-      now: now,
-      year: now.getFullYear(),
-      month: now.getMonth(),
-      day: now.getDate()
-    }
-  }
-
+  // sort list of students by name
   sortedStudents = () => {
-    const students = this.state.currentStudents
+    const students = {...this.state.currentStudents};
     // turn object of student objects into array of student objects
     let studentArray = Object.keys(students).map(key => students[key]);
     // sort array of student objects by name
     studentArray.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
-    return studentArray
+    return studentArray;
   }
 
   render() {
     return (
       <React.Fragment>
-
         {/* show the sign in form or register form */}
         <SignIn
           signIn={this.signIn}
@@ -193,13 +165,13 @@ class CheckIn extends Component {
           message={this.props.message}
           setMessage={this.props.setMessage} />
 
+        {/* show attendance list if not registering a new student */}
         {!this.state.registering ? 
           <AttendanceList 
             currentStudents={this.sortedStudents()}
             refreshStudentList={this.refreshStudentList} 
             signOut={this.signOut} />
         : null}
-
       </React.Fragment>
     )
   }
