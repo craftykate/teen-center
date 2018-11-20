@@ -83,6 +83,7 @@ class SignIn extends Component {
         <Register
           toggleRegister={this.props.toggleRegister}
           register={this.props.register}
+          message={this.props.message}
           setMessage={this.props.setMessage} />
       )
     } else {

@@ -19,7 +19,7 @@ const utilities = {
   // check if id exists at a certain link
   doesIDExist(token, link, ID) {
     return axios.get(`${link}?auth=${token}&shallow=true`).then(records => {
-      console.log(`getting ${link}`);
+      console.log(`getting ${link} ids`);
       // if there are ids at this link...
       if (records.data) {
         // turn keys of ids into an array

@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import axios from '../../../utils/axios';
 import utilities from '../../../utils/utilities';
 import RegisterForm from './RegisterForm/RegisterForm';
 
@@ -18,16 +17,14 @@ class Register extends Component {
 
   // update the correct state field with whatever has been typed in
   updateField = (e, fieldName) => {
-    this.setState({
-      [fieldName]: e.target.value
-    })
+    this.setState({ [fieldName]: e.target.value })
+    if (this.props.message) this.props.setMessage('');
   }
 
   // toggle state of 
   toggleCheckbox = () => {
-    this.setState({ 
-      agree: !this.state.agree 
-    });
+    this.setState({ agree: !this.state.agree });
+    if (this.props.message) this.props.setMessage('');
   }
 
   // validate fields then add data to database
@@ -38,27 +35,17 @@ class Register extends Component {
       // take out irrelevant fields
       const student = { ...this.state };
       delete student.agree;
-      // authorize user
       utilities.getToken().then(token => {
-        // get all the students to make sure id is unique
-        axios.get(`/students.json?auth=${token}`).then(students => {
-          console.log(`getting all students`)
-          // if there are students in database make sure id is unique
-          if (students.data) {
-            // turn keys of ids into an array
-            const ids = Object.keys(students.data);
-            // if id is unique, register student
-            if (!ids.includes(`id-${this.state.id}`)) {
-              this.props.register(student, signInMethod);
-            // id isn't unique
-            } else {
-              this.props.setMessage("That ID has already been registered")
-            }
-          // no students yet, so just upload data
-          } else {
+        // check if id already exists in database
+        utilities.doesIDExist(token, `/students.json`, student.id).then((exists) => {
+          // id is NOT in database already so register student
+          if (!exists) {
             this.props.register(student, signInMethod);
+          // id IS in database
+          } else {
+            this.props.setMessage("That ID has already been registered")
           }
-        }).catch(error => this.props.setMessage(error.message)); // something happened getting data
+        }).catch(error => this.props.setMessage(error.message)); // something happened checking student ids
       }).catch(error => this.props.setMessage(error.message)); // something happened verifying user
     // all fields weren't filled out
     } else {

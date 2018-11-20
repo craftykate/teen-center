@@ -11,7 +11,7 @@ _Check for comments and refactoring_
   * ~~Signin.js~~
     * ~~Register.js~~
       * ~~RegisterForm.js~~
-  * AttendanceList.js
+  * ~~AttendanceList.js~~
 * Reports.js
   * StudentInfo.js
   * SingleDay.js
