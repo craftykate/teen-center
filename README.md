@@ -1,4 +1,5 @@
 # Pages
+
 _Check for comments and refactoring_
 * ~~App.js~~
 * ~~Layout.js~~
@@ -21,9 +22,12 @@ _Check for comments and refactoring_
 * custom.scss
 
 # To Do
+* Move messages to their own fixed spot
+
 **Checkin**
-* Order attendance list by time in - or by first name? Probably name
+* ~~Order attendance list by time in - or by first name? Probably name~~
 * ~~Change times to 12 hr~~
+* Make sure starting a new day erases attendance list
 
 **Style**
 * Set min-width on wrapper
@@ -32,6 +36,7 @@ _Check for comments and refactoring_
 **General Site**
 * Focus cursor in fields
 * Which firebase modules do i need?
+* Build one place for all error/success messages
 
 **Firebase**
 * Make sure app still works when user has timed out
@@ -41,13 +46,14 @@ _Check for comments and refactoring_
 **Login**
 * Add password recovery to admin login (https://firebase.google.com/docs/auth/web/manage-users)
 
-~~**Register**~~
+**Register**
 * ~~Totally reformat registration function~~
 * ~~Message and agree are getting posted to database~~
 * ~~Add "Register and sign in now" button~~
 * ~~Some sort of feedback when they register successfully~~
 
 ## Stories
+
 **Student Side**
 * ~~Admin can log in to student account so students can sign in but can't access admin features~~
 * ~~The sign in page shows a running list of who signed in that day, when they arrived and when they left. This should have a refresh link in case two computers are used to sign in and student doesn't see their name~~

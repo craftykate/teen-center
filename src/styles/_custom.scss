@@ -25,6 +25,7 @@
 //*============ HEADER ============*/
 	header {
 		position: relative;
+		margin-bottom: 30px;
 		padding-bottom: 10px;
 		color: $main;
 		border-bottom: 1px solid $main;
@@ -66,7 +67,7 @@ form {
 	h2 {
 		text-align: center;
 		font-size: 1.8em;
-		margin-bottom: 20px;
+		margin-bottom: 25px;
 	}
 	input, button {
 		display: block;
@@ -106,11 +107,12 @@ form {
 		color: $text;
 	}
 	p.message {
+		position: absolute;
 		color: red;
-		margin-bottom: 5px;
+		transform: translate(0, -20px);
 		&.flash {
-			position: absolute;
-			transform: translate(0, -5px)
+			// position: absolute;
+			transform: translate(0, -3px);
 		}
 	}
 	button {

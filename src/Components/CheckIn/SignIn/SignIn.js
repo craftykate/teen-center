@@ -113,15 +113,15 @@ class SignIn extends Component {
 
   render() {
     let signInOrUp = (
-      <form>
+      <form autoComplete="off">
         <p className="message">{this.state.message}</p>
-        <label htmlFor="id">Sign in with your ID:</label>
+        {/* <label htmlFor="id">Sign in with your ID:</label> */}
         <input type="text"
           name="id"
           className="inline"
           onChange={this.handleTermChange}
           onKeyPress={(e) => this.validateID(e, this.state.searchTerm)}
-          placeholder="Student ID"
+          placeholder="Sign in with your student ID"
           value={this.state.searchTerm} />
         <a onClick={this.toggleRegister}>(or register)</a> {/* eslint-disable-line */}
         <p className="flash message">{this.props.successMessage}</p>
