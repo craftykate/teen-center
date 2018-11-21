@@ -14,7 +14,7 @@ const attendanceList = (props) => {
       hours = ((hours + 11) % 12 + 1);
       // pad minutes with a zero if it's single digit
       const minutes = ("0" + time.getMinutes()).slice(-2);
-      return `${hours}:${minutes}${suffix}`;
+      return <span className="hidden-link" onClick={() => props.unSignOut(ID)}>{`${hours}:${minutes}${suffix}`}</span>;
     // time is undefined, so they haven't logged out yet, so show log out link
     } else {
       return <a onClick={() => props.signOut(ID)}>sign out</a>; /* eslint-disable-line */
@@ -75,6 +75,11 @@ const attendanceList = (props) => {
       <tbody>
         {currentStudents}
       </tbody>
+      <tfoot>
+        <tr>
+          <td colSpan="3">Sign someone out by accident? Click their sign out time to undo</td>
+        </tr>
+      </tfoot>
     </table>
   )
 };

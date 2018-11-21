@@ -92,7 +92,8 @@ class CheckIn extends Component {
     const dateInfo = utilities.getDateInfo(new Date());
     utilities.getToken().then(token => {
       // check if student is logged in for the day (not old data)
-      utilities.doesIDExist(token, `/logs/${dateInfo.year}${dateInfo.month}${dateInfo.day}.json`, ID).then(signedIn => {
+      const link = `/logs/${dateInfo.year}${dateInfo.month}${dateInfo.day}.json`;
+      utilities.doesIDExist(token, link, ID).then(signedIn => {
         // good data, so sign them out
         if (signedIn) {
           const link = `/logs/${dateInfo.year}${dateInfo.month}${dateInfo.day}/id-${ID}/timeOut.json`;
@@ -102,23 +103,41 @@ class CheckIn extends Component {
             if (response.status === 200) {
               const currentStudents = {...this.state.currentStudents};
               currentStudents[`id-${ID}`].timeOut = dateInfo.now;
-              this.setState({ currentStudents: currentStudents })
+              this.setState({ currentStudents })
             } else {
               this.props.setMessage('Oops, there was an error signing out, try again');
             }
-          })
+          }).catch(error => console.log(error));
         // old data, so refresh attendance list
         } else {
-          this.getCurrentStudents(token).then(currentStudents => {
-            this.setState({ currentStudents });
-            this.props.setMessage('There was a problem, here\'s a current list of students signed in');
-            setTimeout(() => {
-              this.props.setMessage('');
-            }, 5000);
-          }).catch(error => console.log(error))
+          this.refreshStudentList();
+          this.props.setMessage('There was a problem, here\'s a current list of students signed in');
+          setTimeout(() => {
+            this.props.setMessage('');
+          }, 5000);
         }
       }).catch(error => console.log(error))
-    })
+    }).catch(error => console.log(error))
+  }
+
+  // if accidentally signed out, sign them back in
+  unSignOut = (ID) => {
+    const dateInfo = utilities.getDateInfo(new Date());
+    utilities.getToken().then(token => {
+      // delete timeOut node
+      const link = `/logs/${dateInfo.year}${dateInfo.month}${dateInfo.day}/id-${ID}/timeOut.json`;
+      axios.delete(`${link}?auth=${token}`).then(response => {
+        console.log(`signing back in`);
+        // also delete node in state
+        if (response.status === 200) {
+          const currentStudents = {...this.state.currentStudents};
+          delete currentStudents[`id-${ID}`].timeOut;
+          this.setState({ currentStudents })
+        } else {
+          this.props.setMessage('Oops, there was an error, try again');
+        }
+      }).catch(error => console.log(error));
+    }).catch(error => console.log(error))
   }
 
   // get list of currently signed in students
@@ -170,7 +189,8 @@ class CheckIn extends Component {
           <AttendanceList 
             currentStudents={this.sortedStudents()}
             refreshStudentList={this.refreshStudentList} 
-            signOut={this.signOut} />
+            signOut={this.signOut}
+            unSignOut={this.unSignOut} />
         : null}
       </React.Fragment>
     )

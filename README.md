@@ -7,7 +7,7 @@ _Check for comments and refactoring_
     * ~~Authorize.js~~
       * ~~AuthorizeForm.js~~
   * ~~Footer.js~~
-* Checkin.js
+* ~~Checkin.js~~
   * ~~Signin.js~~
     * ~~Register.js~~
       * ~~RegisterForm.js~~
@@ -23,11 +23,10 @@ _Check for comments and refactoring_
 
 # To Do
 
-**Checkin**
-* ~~Order attendance list by time in - or by first name? Probably name~~
-* ~~Change times to 12 hr~~
-* Make sure starting a new day erases attendance list
-* Clicking a signed out time will un-sign them out, in case of mistake
+**Admin**
+* Build range report page
+* Build daily report page
+* Build student look up feature
 
 **Style**
 * Set min-width on wrapper
@@ -53,6 +52,12 @@ _Check for comments and refactoring_
 * ~~Add "Register and sign in now" button~~
 * ~~Some sort of feedback when they register successfully~~
 
+**Checkin**
+* ~~Order attendance list by time in - or by first name? Probably name~~
+* ~~Change times to 12 hr~~
+* ~~Make sure you can't sign out a student who isn't there (ie: old data or new day)~~
+* ~~Clicking a signed out time will un-sign them out, in case of mistake~~
+
 ## Stories
 
 **Student Side**
@@ -77,4 +82,5 @@ _Check for comments and refactoring_
 * Take out console.logs for database hits
 * Upload to internet
 * Update meta property tags on index.html
+* Lock down database to only this domain
 * Move database over to Lynn, make sure to update variables.js. Add myself as a user on database
