@@ -9,7 +9,7 @@ class App extends Component {
   state = {
     user: null, // signed in admin info
     account: '', // student or admin controls
-    message: '' // app-wide place for error and success messages
+    message: '' // student-wide place for error and success messages
   };
 
   // listen if user logs in
@@ -48,7 +48,7 @@ class App extends Component {
     localStorage.setItem('account', account);
   }
 
-  // app-wide error and success message
+  // student-wide error and success message
   setMessage = (message) => {
     console.log('set message')
     this.setState({ message });

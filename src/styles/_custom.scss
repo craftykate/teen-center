@@ -40,6 +40,11 @@
 //*============ END HEADER ============*/
 
 //*============ MAIN ============*/
+.admin-message {
+	position: absolute;
+	transform: translate(0, -20px);
+	color: $main;
+}
 form {
 	margin-top: 15px;
 	color: $text;
@@ -97,6 +102,26 @@ form {
 		cursor: pointer;
 		&:hover {
 			background-color: darken($accent, 20%);
+		}
+	}
+}
+
+nav { 
+	ul {
+		transform: translate(0, -20px);
+		margin-bottom: 5px;
+		display: grid;
+		grid-template-columns: auto auto auto auto;
+		li {
+			padding: 10px;
+			background-color: white;
+			text-align: center;
+			color: $accent;
+			cursor: pointer;
+			&.active, &:hover {
+				background-color: $accent;
+				color: white;
+			}
 		}
 	}
 }
