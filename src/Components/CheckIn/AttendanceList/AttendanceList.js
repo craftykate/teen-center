@@ -4,7 +4,7 @@ import React from 'react';
 const attendanceList = (props) => {
 
   // function to convert date to readable time format
-  const convertTime = (stringTime, ID) => {
+  const convertTime = (stringTime, ID, inOrOut) => {
     // convert time to readable format
     if (stringTime !== undefined) {
       const time = new Date(stringTime);
@@ -14,7 +14,12 @@ const attendanceList = (props) => {
       hours = ((hours + 11) % 12 + 1);
       // pad minutes with a zero if it's single digit
       const minutes = ("0" + time.getMinutes()).slice(-2);
-      return <span className="hidden-link" onClick={() => props.unSignOut(ID)}>{`${hours}:${minutes}${suffix}`}</span>;
+      // if it's a sign in time, display the time, if it's a signout time, include a link to undo
+      if (inOrOut === 'out') {
+        return <span className='hidden-link' onClick={() => props.unSignOut(ID)}>{`${hours}:${minutes}${suffix}`}</span>;
+      } else {
+        return <span>{`${hours}:${minutes}${suffix}`}</span>;
+      }
     // time is undefined, so they haven't logged out yet, so show log out link
     } else {
       return <a onClick={() => props.signOut(ID)}>sign out</a>; /* eslint-disable-line */
@@ -43,8 +48,8 @@ const attendanceList = (props) => {
       currentStudents.push(
         [<tr key={student.id}>
           <td>{student.name}</td>
-          <td>{convertTime(student.timeIn)}</td>
-          <td>{convertTime(student.timeOut, student.id)}</td>
+          <td>{convertTime(student.timeIn, student.id, 'in')}</td>
+          <td>{convertTime(student.timeOut, student.id, 'out')}</td>
         </tr>]
       )
     }

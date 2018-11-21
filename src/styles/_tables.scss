@@ -59,6 +59,9 @@
 					color: $main;
 				}
 			}
+			tr:nth-child(odd) {
+				background-color: lighten($accent, 41%);
+			}
 			td:first-child {
 				text-align: left;
 				font-weight: bold;
