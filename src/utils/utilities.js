@@ -8,11 +8,15 @@ const utilities = {
 
   getDateInfo(dateString) {
     const now = new Date(dateString);
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     return {
       now,
       year: now.getFullYear(),
       month: now.getMonth(),
-      day: now.getDate()
+      day: now.getDate(),
+      weekdayName: days[now.getDay()],
+      monthName: months[now.getMonth()]
     }
   },
 

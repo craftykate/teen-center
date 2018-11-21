@@ -1,4 +1,5 @@
 import React from 'react';
+import utilities from '../../../utils/utilities';
 
 // show today's students
 const attendanceList = (props) => {
@@ -26,19 +27,6 @@ const attendanceList = (props) => {
     }
   }
 
-  // format date for top of attendance list
-  const readableDay = () => {
-    const today = new Date();
-    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-    const formattedDate = {
-      day: days[today.getDay()],
-      month: months[today.getMonth()],
-      date: today.getDate()
-    }
-    return `${formattedDate.day}, ${formattedDate.month} ${formattedDate.date}`;
-  }
-
   // display today's students if there are any
   let currentStudents = [];
   if (props.currentStudents && Object.keys(props.currentStudents).length > 0) {
@@ -62,12 +50,15 @@ const attendanceList = (props) => {
     )
   }
 
+  const todaysDate = utilities.getDateInfo(new Date());
+  const todayHeading = `${todaysDate.weekdayName}, ${todaysDate.monthName} ${todaysDate.day}`;
+
   return (
     <table>
       <thead>
         <tr>
           <th colSpan="3">
-            <span className="heading">{readableDay()}</span>
+            <span className="heading">{todayHeading}</span>
             <span className="description block">(<a onClick={props.refreshStudentList}>refresh</a> if you don't see your name)</span>{/* eslint-disable-line */}
           </th>
         </tr>

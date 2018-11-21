@@ -30,16 +30,32 @@ class Reports extends Component {
     let content = null;
     switch (this.state.view) {
       case 'dateRange':
-        content = <DateRange />
+        content = (
+          <DateRange
+            message={this.state.message}
+            setMessage={this.setMessage} />
+        );
         break;
       case 'singleDay':
-        content = <SingleDay />
+        content = (
+          <SingleDay
+            message={this.state.message}
+            setMessage={this.setMessage} />
+        );
         break;
       case 'student':
-        content = <StudentInfo />
+        content = (
+          <StudentInfo
+            message={this.state.message}
+            setMessage={this.setMessage} />
+        );
         break;
       case 'pastSignIn':
-        content = <PastSignIn />
+        content = (
+          <PastSignIn
+            message={this.state.message}
+            setMessage={this.setMessage} />
+        );
         break;
       default:
         break;

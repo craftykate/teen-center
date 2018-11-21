@@ -85,6 +85,9 @@ form {
 	input.inline {
 		display: inline;
 		margin-right: 10px;
+		&.small {
+			width: auto;
+		}
 	}
 	label {
 		display: block;
@@ -112,11 +115,15 @@ nav {
 		margin-bottom: 5px;
 		display: grid;
 		grid-template-columns: auto auto auto auto;
+		grid-column-gap: 10px;
 		li {
 			padding: 10px;
 			background-color: white;
-			text-align: center;
 			color: $accent;
+			border-radius: 5px;
+			display: flex;
+			align-items: center;
+			text-align: center;
 			cursor: pointer;
 			&.active, &:hover {
 				background-color: $accent;
