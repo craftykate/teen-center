@@ -16,6 +16,7 @@ const utilities = {
       month: ("0" + now.getMonth()).slice(-2),
       day: ("0" + now.getDate()).slice(-2),
       weekdayName: days[now.getDay()],
+      weekdayNum: now.getDay(),
       monthName: months[now.getMonth()]
     }
   },

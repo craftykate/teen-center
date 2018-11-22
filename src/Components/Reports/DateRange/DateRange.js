@@ -6,7 +6,9 @@ import './DateRange.css';
 class DateRange extends Component {
   state = {
     from: '',
+    fromString: '', // so the input fields don't change the results header
     to: '',
+    toString: '', // so the input fields don't change the results header
     students: 0,
     visits: 0,
     averages: {}
@@ -20,24 +22,46 @@ class DateRange extends Component {
 
   getDateRangeData = (e) => {
     e.preventDefault(); 
+    // turn dates from input fields into database format
     const from = this.convertDate(this.state.from);
     const to = this.convertDate(this.state.to);
     utilities.getToken().then(token => {
+      // get log in data from date range
       const link = `/logs.json?auth=${token}&orderBy="$key"&startAt="${from}"&endAt="${to}"`;
       axios.get(link).then(rangeData => {
-        let allIDs = [];
-        let averages = {0:{},1:{},2:{},3:{},4:{},5:{},6:{}};
+        // store every visit
+        const allIDs = []; 
+        // store visits by weekday to make averages
+        const averages = {0:{weekNums: 0, visits: 0}, 1:{weekNums: 0, visits: 0}, 2:{weekNums: 0, visits: 0}, 3:{weekNums: 0, visits: 0}, 4:{weekNums: 0, visits: 0}, 5:{weekNums: 0, visits: 0}, 6:{weekNums: 0, visits: 0}};
         for (let day in rangeData.data) {
-          allIDs.push(...Object.keys(rangeData.data[day]));
-          console.log(rangeData.data[day])
+          // add all ids from this day to array to count later
+          allIDs.push(...Object.keys(rangeData.data[day])); 
+          // convert day string (yyyymmdd) into actual date object
+          const month = parseInt(day.slice(4, 6), 10) + 1;
+          const date = `${month}/${day.slice(-2)}/${day.slice(0, 4)}`;
+          // get the number of the day of the week
+          const dayOfWeek = utilities.getDateInfo(date).weekdayNum;
+          averages[dayOfWeek].weekNums++;
           for (let student in rangeData.data[day]) {
-            console.log(rangeData.data[day][student])
+            averages[dayOfWeek].visits++;
           }
         }
-        const uniqueIDs = [...new Set(allIDs)];
+        const calculatedAverages = {};
+        for (let day in averages) {
+          if (averages[day].weekNums !== 0) {
+            calculatedAverages[day] = averages[day].visits / averages[day].weekNums;
+          } else {
+            calculatedAverages[day] = 0;
+          }
+        }
+        // make a new array from just unique ids in order to count students
+        const uniqueIDs = [...new Set(allIDs)]; 
         this.setState({
           students: uniqueIDs.length,
-          visits: allIDs.length
+          visits: allIDs.length,
+          fromString: this.state.from,
+          toString: this.state.to,
+          averages: calculatedAverages
         })
       }).catch(error => console.log(error));
     })
@@ -59,7 +83,7 @@ class DateRange extends Component {
     let results = null;
     if (this.state.students) {
       const dateHeader = (
-        <h2>From <span>{this.formatDate(this.state.from)}</span> to <span>{this.formatDate(this.state.to)}</span></h2>
+        <h2>From <span>{this.formatDate(this.state.fromString)}</span> to <span>{this.formatDate(this.state.toString)}</span></h2>
       );
       results = (
         <React.Fragment>
@@ -82,31 +106,31 @@ class DateRange extends Component {
             <tbody>
               <tr>
                 <td>Monday</td>
-                <td>20</td>
+                <td>{this.state.averages[1]}</td>
               </tr>
               <tr>
                 <td>Tuesday</td>
-                <td>25</td>
+                <td>{this.state.averages[2]}</td>
               </tr>
               <tr>
                 <td>Wednesday</td>
-                <td>30</td>
+                <td>{this.state.averages[3]}</td>
               </tr>
               <tr>
                 <td>Thursday</td>
-                <td>35</td>
+                <td>{this.state.averages[4]}</td>
               </tr>
               <tr>
                 <td>Friday</td>
-                <td>40</td>
+                <td>{this.state.averages[5]}</td>
               </tr>
               <tr>
                 <td>Saturday</td>
-                <td>0</td>
+                <td>{this.state.averages[6]}</td>
               </tr>
               <tr>
                 <td>Sunday</td>
-                <td>0</td>
+                <td>{this.state.averages[0]}</td>
               </tr>
             </tbody>
           </table>
