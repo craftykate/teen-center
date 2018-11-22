@@ -13,8 +13,8 @@ const utilities = {
     return {
       now,
       year: now.getFullYear(),
-      month: now.getMonth(),
-      day: now.getDate(),
+      month: ("0" + now.getMonth()).slice(-2),
+      day: ("0" + now.getDate()).slice(-2),
       weekdayName: days[now.getDay()],
       monthName: months[now.getMonth()]
     }
