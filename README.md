@@ -44,17 +44,17 @@ After report is run: <br/>
 
 ### User Feedback
 At every step is plenty of user feedback. If there's a problem logging in to the site, the Firebase errors are displayed: <br/>
-<img src="public/img/error-login.png" width="600" />
+<img src="public/img/error-login.png" width="400" />
 
 If the student didn't fill out all the registration fields or they are using an ID that has already been registered they get error messages: <br/>
-<img src="public/img/error-reg-fields.png" width="600" />
-<img src="public/img/error-reg-id.png" width="600" />
+<img src="public/img/error-reg-fields.png" width="400" />
+<img src="public/img/error-reg-id.png" width="400" />
 
 Once they do register a success message is shown for a brief time confirming they have either registered or registered and signed in.
 
 If they are trying to sign in with an id that hasn't been registered yet or with an ID that has already signed in they get error messages: <br/>
-<img src="public/img/error-signin-noid.png" width="600" />
-<img src="public/img/error-signin-alreadyid.png" width="600" />
+<img src="public/img/error-signin-noid.png" width="400" />
+<img src="public/img/error-signin-alreadyid.png" width="400" />
 
 Nothing happens on the site leaving the user wondering if what they did worked, and all errors are shown if something doesn't go right. 
 
