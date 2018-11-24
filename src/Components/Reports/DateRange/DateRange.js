@@ -136,6 +136,8 @@ class DateRange extends Component {
           </table>
         </React.Fragment>
       )
+    } else if (this.state.toString && this.state.students === 0) {
+      results = <p>No records for that date range</p>
     }
     return (
       <div id="date-range">
