@@ -27,6 +27,7 @@ class Reports extends Component {
   }
 
   render() {
+    // choose which "page" to view
     let content = null;
     switch (this.state.view) {
       case 'dateRange':

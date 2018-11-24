@@ -37,15 +37,15 @@ class DateRange extends Component {
           // add all ids from this day to array to count later
           allIDs.push(...Object.keys(rangeData.data[day])); 
           // convert day string (yyyymmdd) into actual date object
+          const year = day.slice(0, 4);
           const month = parseInt(day.slice(4, 6), 10) + 1;
-          const date = `${month}/${day.slice(-2)}/${day.slice(0, 4)}`;
+          const date = day.slice(-2);
           // get the number of the day of the week
-          const dayOfWeek = utilities.getDateInfo(date).weekdayNum;
+          const dayOfWeek = utilities.getDateInfo(`${month}/${date}/${year}`).weekdayNum;
           averages[dayOfWeek].weekNums++;
-          for (let student in rangeData.data[day]) {
-            averages[dayOfWeek].visits++;
-          }
+          averages[dayOfWeek].visits += Object.keys(rangeData.data[day]).length
         }
+        // calculate average per day
         const calculatedAverages = {};
         for (let day in averages) {
           if (averages[day].weekNums !== 0) {
