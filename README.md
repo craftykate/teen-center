@@ -42,6 +42,10 @@ Before entering date range: <br/>
 After report is run: <br/>
 <img src="public/img/daterange2.png" width="600" />
 
+### Admin Side - Single Day Report
+They can also look up detailed logs of who visited on a particular day in the past. Maybe they need to know how many kids showed up to their last ice cream social to estimate how much ice cream to get, or if a certain student was there last Tuesday. Enter in a date and they'll get a list of students and their sign in and sign out times (and an "n/a" if the student forgot to sign in or out): <br />
+<img src="public/img/singleday.png" width="600" />
+
 ### User Feedback
 At every step is plenty of user feedback. If there's a problem logging in to the site, the Firebase errors are displayed: <br/>
 <img src="public/img/error-login.png" width="400" />
@@ -59,4 +63,4 @@ If they are trying to sign in with an id that hasn't been registered yet or with
 Nothing happens on the site leaving the user wondering if what they did worked, and all errors are shown if something doesn't go right. 
 
 ## Coming Up
-This site is still a work in progress. This is my first 7 days of work. Coming up students will be able to edit their data later when their phone number changes or they change schools. Other reports will be available like a single day report. Maybe they need to know how many kids showed up to their last ice cream social to estimate how much ice cream to get, or if a certain student was there last Tuesday. They will also be able to look up a student and get their registration info in case they need to call the parents. They will also be able to sign students in for a past date in case the power goes down and they have to use paper logs that day - but mostly I'm building this feature so they can have a quick day of getting their past data into the site for as far back as they want to go. 
+This site is still a work in progress! I'm still actively building this app for them. Coming up students will be able to edit their data later when their phone number changes or they change schools. Other reports will be available on the admin. They will be able to look up a student and get their registration info in case they need to call the parents. They will also be able to sign students in for a past date in case the power goes down and they have to use paper logs that day - but mostly I'm building this feature so they can have a quick day of getting their past data into the site for as far back as they want to go. 
