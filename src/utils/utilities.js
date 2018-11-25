@@ -17,7 +17,8 @@ const utilities = {
       day: ("0" + now.getDate()).slice(-2),
       weekdayName: days[now.getDay()],
       weekdayNum: now.getDay(),
-      monthName: months[now.getMonth()]
+      monthName: months[now.getMonth()],
+      link: `${now.getFullYear()}${("0" + now.getMonth()).slice(-2)}${("0" + now.getDate()).slice(-2)}`
     }
   },
 

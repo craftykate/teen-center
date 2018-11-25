@@ -1,7 +1,7 @@
 import React from 'react';
 
 const pastSignIn = () => (
-  <p>Past Sign In</p>
+  <p>Coming Soon</p>
 );
 
 export default pastSignIn;

@@ -49,11 +49,12 @@ class StudentInfo extends Component {
     }
     return (
       <React.Fragment>
-        <input type="text"
+        <p>Coming Soon</p>
+        {/* <input type="text"
           onChange={this.handleTermChange}
           onKeyPress={this.getStudentInfo}
           placeholder="Student ID"
-          value={this.state.searchTerm} />
+          value={this.state.searchTerm} /> */}
         {student}
       </React.Fragment>
     )

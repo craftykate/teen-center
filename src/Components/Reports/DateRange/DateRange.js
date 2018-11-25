@@ -22,52 +22,58 @@ class DateRange extends Component {
 
   getDateRangeData = (e) => {
     e.preventDefault(); 
-    // turn dates from input fields into database format
-    const from = this.convertDate(this.state.from);
-    const to = this.convertDate(this.state.to);
-    utilities.getToken().then(token => {
-      // get log in data from date range
-      const link = `/logs.json?auth=${token}&orderBy="$key"&startAt="${from}"&endAt="${to}"`;
-      axios.get(link).then(rangeData => {
-        // store every visit
-        const allIDs = []; 
-        // store visits by weekday to make averages
-        const averages = {0:{weekNums: 0, visits: 0}, 1:{weekNums: 0, visits: 0}, 2:{weekNums: 0, visits: 0}, 3:{weekNums: 0, visits: 0}, 4:{weekNums: 0, visits: 0}, 5:{weekNums: 0, visits: 0}, 6:{weekNums: 0, visits: 0}};
-        for (let day in rangeData.data) {
-          // add all ids from this day to array to count later
-          allIDs.push(...Object.keys(rangeData.data[day])); 
-          // convert day string (yyyymmdd) into actual date object
-          const year = day.slice(0, 4);
-          const month = parseInt(day.slice(4, 6), 10) + 1;
-          const date = day.slice(-2);
-          // get the number of the day of the week
-          const dayOfWeek = utilities.getDateInfo(`${month}/${date}/${year}`).weekdayNum;
-          averages[dayOfWeek].weekNums++;
-          averages[dayOfWeek].visits += Object.keys(rangeData.data[day]).length
-        }
-        // calculate average per day
-        const calculatedAverages = {};
-        for (let day in averages) {
-          if (averages[day].weekNums !== 0) {
-            calculatedAverages[day] = averages[day].visits / averages[day].weekNums;
-          } else {
-            calculatedAverages[day] = 0;
+    if (this.state.from && this.state.to) {
+      // turn dates from input fields into database format
+      const from = utilities.getDateInfo(this.state.from).link;
+      const to = utilities.getDateInfo(this.state.to).link;
+      utilities.getToken().then(token => {
+        // get log in data from date range
+        const link = `/logs.json?auth=${token}&orderBy="$key"&startAt="${from}"&endAt="${to}"`;
+        axios.get(link).then(rangeData => {
+          console.log('/logs');
+          if (Object.keys(rangeData.data).length === 0) this.props.setMessage('No records for that data range')
+          // store every visit
+          const allIDs = []; 
+          // store visits by weekday to make averages
+          const averages = {0:{weekNums: 0, visits: 0}, 1:{weekNums: 0, visits: 0}, 2:{weekNums: 0, visits: 0}, 3:{weekNums: 0, visits: 0}, 4:{weekNums: 0, visits: 0}, 5:{weekNums: 0, visits: 0}, 6:{weekNums: 0, visits: 0}};
+          for (let day in rangeData.data) {
+            // add all ids from this day to array to count later
+            allIDs.push(...Object.keys(rangeData.data[day])); 
+            // convert day string (yyyymmdd) into actual date object
+            const year = day.slice(0, 4);
+            const month = parseInt(day.slice(4, 6), 10) + 1;
+            const date = day.slice(-2);
+            // get the number of the day of the week
+            const dayOfWeek = utilities.getDateInfo(`${month}/${date}/${year}`).weekdayNum;
+            averages[dayOfWeek].weekNums++;
+            averages[dayOfWeek].visits += Object.keys(rangeData.data[day]).length
           }
-        }
-        // make a new array from just unique ids in order to count students
-        const uniqueIDs = [...new Set(allIDs)]; 
-        this.setState({
-          students: uniqueIDs.length,
-          visits: allIDs.length,
-          fromString: this.state.from,
-          toString: this.state.to,
-          averages: calculatedAverages
-        })
-      }).catch(error => console.log(error));
-    })
+          // calculate average per day
+          const calculatedAverages = {};
+          for (let day in averages) {
+            if (averages[day].weekNums !== 0) {
+              calculatedAverages[day] = averages[day].visits / averages[day].weekNums;
+            } else {
+              calculatedAverages[day] = 0;
+            }
+          }
+          // make a new array from just unique ids in order to count students
+          const uniqueIDs = [...new Set(allIDs)]; 
+          this.setState({
+            students: uniqueIDs.length,
+            visits: allIDs.length,
+            fromString: this.state.from,
+            toString: this.state.to,
+            averages: calculatedAverages
+          })
+        }).catch(error => console.log(error));
+      })
+    } else {
+      this.props.setMessage('Enter valid dates');
+    }
   }
 
-  convertDate = (dateString) => {
+  convertDateForLink = (dateString) => {
     const date = utilities.getDateInfo(dateString);
     return `${date.year}${date.month}${date.day}`;
   }
@@ -136,12 +142,12 @@ class DateRange extends Component {
           </table>
         </React.Fragment>
       )
-    } else if (this.state.toString && this.state.students === 0) {
-      results = <p>No records for that date range</p>
+    // } else if (this.state.toString && this.state.students === 0) {
+    //   results = <p>No records for that date range</p>
     }
     return (
       <div id="date-range">
-        <form>
+        <form autoComplete="off">
           <label>Start Date:</label>
           <input type="text"
             name="from"

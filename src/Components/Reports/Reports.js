@@ -6,13 +6,16 @@ import PastSignIn from './PastSignIn/PastSignIn';
 
 class Reports extends Component {
   state = {
-    view: 'dateRange', // which "page" to look at
+    view: 'singleDay', // which "page" to look at
     message: '' // admin-wide place for error and success messages
   }
 
   // choose which page to display
   switchView = (view) => {
-    this.setState({ view })
+    this.setState({ 
+      view,
+      message: '' 
+    })
   }
 
   // admin-wide error and success message
