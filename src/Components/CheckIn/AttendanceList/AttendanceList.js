@@ -52,7 +52,8 @@ const attendanceList = (props) => {
 
   const todaysDate = utilities.getDateInfo(new Date());
   const abbrMonth = todaysDate.monthName.slice(0, 3);
-  const todayHeading = `${todaysDate.weekdayName}, ${abbrMonth} ${todaysDate.day} - ${currentStudents.length} students`;
+  let numStudents = currentStudents.length ? currentStudents.length : 0;
+  const todayHeading = `${todaysDate.weekdayName}, ${abbrMonth} ${todaysDate.day} - ${numStudents} students`;
 
   return (
     <table>

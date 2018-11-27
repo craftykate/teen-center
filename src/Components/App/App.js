@@ -50,7 +50,6 @@ class App extends Component {
 
   // student-wide error and success message
   setMessage = (message) => {
-    console.log('set message')
     this.setState({ message });
   }
 
