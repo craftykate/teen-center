@@ -13,7 +13,7 @@ const registerForm = (props) => (
 
     <input type="text"
       onChange={(e) => props.updateField(e, 'name')}
-      placeholder="Your name"
+      placeholder="Your first and last name"
       value={props.state.name} />
 
     <input type="text"

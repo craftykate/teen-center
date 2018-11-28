@@ -35,6 +35,10 @@ class Register extends Component {
       // take out irrelevant fields
       const student = { ...this.state };
       delete student.agree;
+      // capitalize first name
+      const name = student.name;
+      const capName = name.charAt(0).toUpperCase() + name.slice(1);
+      student.name = capName;
       utilities.getToken().then(token => {
         // check if id already exists in database
         utilities.doesIDExist(token, `/students.json`, student.id).then(exists => {
