@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import axios from '../../../utils/axios';
 import utilities from '../../../utils/utilities';
-import './DateRange.css';
+import DateRangeData from './DateRangeData/DateRangeData';
 
 class DateRange extends Component {
   state = {
@@ -32,13 +32,18 @@ class DateRange extends Component {
         axios.get(link).then(rangeData => {
           console.log('/logs');
           if (Object.keys(rangeData.data).length === 0) this.props.setMessage('No records for that data range')
-          // store every visit
+          // to store every visitor's id
           const allIDs = []; 
           // store visits by weekday to make averages
           const averages = {0:{weekNums: 0, visits: 0}, 1:{weekNums: 0, visits: 0}, 2:{weekNums: 0, visits: 0}, 3:{weekNums: 0, visits: 0}, 4:{weekNums: 0, visits: 0}, 5:{weekNums: 0, visits: 0}, 6:{weekNums: 0, visits: 0}};
+          // go through each day in range
           for (let day in rangeData.data) {
+
+            // ADD EVERY ID FOR THAT DAY
             // add all ids from this day to array to count later
             allIDs.push(...Object.keys(rangeData.data[day])); 
+
+            // ADD NUMBER OF VISITS TO DAY OF WEEK
             // convert day string (yyyymmdd) into actual date object
             const year = day.slice(0, 4);
             const month = parseInt(day.slice(4, 6), 10) + 1;
@@ -47,6 +52,7 @@ class DateRange extends Component {
             const dayOfWeek = utilities.getDateInfo(`${month}/${date}/${year}`).weekdayNum;
             averages[dayOfWeek].weekNums++;
             averages[dayOfWeek].visits += Object.keys(rangeData.data[day]).length
+
           }
           // calculate average per day
           const calculatedAverages = {};
@@ -86,65 +92,18 @@ class DateRange extends Component {
   }
 
   render() {
-    let results = null;
+    let data = null;
     if (this.state.students) {
-      const dateHeader = (
-        <h2>From <span>{this.formatDate(this.state.fromString)}</span> to <span>{this.formatDate(this.state.toString)}</span></h2>
-      );
-      results = (
-        <React.Fragment>
-          <div id="range-results">
-            {dateHeader}
-            <p>Total # of Students: <span>{this.state.students}</span></p>
-            <p>Total # of Visits: <span>{this.state.visits}</span></p>
-          </div>
-
-          <table>
-            <thead>
-              <tr>
-                <th colSpan="2">Average by Day</th>
-              </tr>
-              <tr>
-                <th>Day</th>
-                <th>Students</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Monday</td>
-                <td>{this.state.averages[1]}</td>
-              </tr>
-              <tr>
-                <td>Tuesday</td>
-                <td>{this.state.averages[2]}</td>
-              </tr>
-              <tr>
-                <td>Wednesday</td>
-                <td>{this.state.averages[3]}</td>
-              </tr>
-              <tr>
-                <td>Thursday</td>
-                <td>{this.state.averages[4]}</td>
-              </tr>
-              <tr>
-                <td>Friday</td>
-                <td>{this.state.averages[5]}</td>
-              </tr>
-              <tr>
-                <td>Saturday</td>
-                <td>{this.state.averages[6]}</td>
-              </tr>
-              <tr>
-                <td>Sunday</td>
-                <td>{this.state.averages[0]}</td>
-              </tr>
-            </tbody>
-          </table>
-        </React.Fragment>
+      data = (
+        <DateRangeData
+          fromString={this.formatDate(this.state.fromString)}
+          toString={this.formatDate(this.state.toString)}
+          students={this.state.students}
+          visits={this.state.visits}
+          averages={this.state.averages} />
       )
-    // } else if (this.state.toString && this.state.students === 0) {
-    //   results = <p>No records for that date range</p>
     }
+
     return (
       <div id="date-range">
         <form autoComplete="off">
@@ -164,7 +123,7 @@ class DateRange extends Component {
             value={this.state.to} />
           <button onClick={this.getDateRangeData}>Run Report</button>
         </form>
-        {results}
+        {data}
       </div>
     )
   }

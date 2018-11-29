@@ -3,10 +3,11 @@ import DateRange from './DateRange/DateRange';
 import SingleDay from './Single Day/SingleDay';
 import StudentInfo from './StudentInfo/StudentInfo';
 import PastSignIn from './PastSignIn/PastSignIn';
+import './Reports.css';
 
 class Reports extends Component {
   state = {
-    view: 'singleDay', // which "page" to look at
+    view: 'dateRange', // which "page" to look at
     message: '' // admin-wide place for error and success messages
   }
 
@@ -20,7 +21,6 @@ class Reports extends Component {
 
   // admin-wide error and success message
   setMessage = (message) => {
-    console.log('set admin message')
     this.setState({ message });
   }
 
@@ -76,7 +76,9 @@ class Reports extends Component {
           </ul>
         </nav>
         <p className="admin-message">{this.state.message}</p>
-        {content}
+        <div id="results">
+          {content}
+        </div>
       </React.Fragment>
     )
   }

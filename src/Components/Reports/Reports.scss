@@ -1,0 +1,54 @@
+@import '../../styles/colors';
+
+#results {
+  #date-range {
+    form {
+      display: grid;
+      margin-bottom: 20px;
+      grid-template-columns:37% 37% 26%;
+      label {
+        grid-row: 1;
+      }
+      input, button {
+        grid-row: 2;
+      }
+    }
+  }
+
+  table {
+    margin: 20px 0 0 0;
+    width: 100%;
+    color: $text;
+    th, td {
+      border-color: $accent;
+    }
+    thead {
+      font-size: 1.2em;
+      font-weight: normal;
+      span {
+        font-weight: bold;
+      }
+      tr.subheading {
+        font-size: .9em;
+        span.description {
+          font-weight: normal;
+        }
+      }
+    }
+    tbody {
+      span {
+        font-weight: bold;
+      }
+      tr {
+        td {
+          font-weight: normal;
+          // width: 50%;
+        }
+      }
+    }
+    &.half-size {
+      float: left;
+      width: 50%;
+    }
+  }
+}

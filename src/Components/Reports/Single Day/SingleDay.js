@@ -25,10 +25,10 @@ class SingleDay extends Component {
       hours = ((hours + 11) % 12 + 1);
       // pad minutes with a zero if it's single digit
       const minutes = ("0" + time.getMinutes()).slice(-2);
-      return <span>{`${hours}:${minutes}${suffix}`}</span>;
+      return `${hours}:${minutes}${suffix}`;
     // time is undefined, so they haven't logged out yet, so show log out link
     } else {
-      return <span>n/a</span>; 
+      return 'n/a'; 
     }
   }
 
@@ -55,11 +55,13 @@ class SingleDay extends Component {
     let students = this.state.students;
     if (students && Object.keys(students).length > 0) {
       studentList = []; 
-      for (let studentInfo in students) {
-        const student = students[studentInfo];
+      let studentArray = Object.keys(students).map(key => students[key]);
+      studentArray.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
+      for (let studentInfo in studentArray) {
+        const student = studentArray[studentInfo];
         studentList.push(
           [<tr key={student.id}>
-            <td>{student.name}</td>
+            <td><span>{student.name}</span></td>
             <td>{this.convertTime(student.timeIn)}</td>
             <td>{this.convertTime(student.timeOut)}</td>
           </tr>]
@@ -73,11 +75,9 @@ class SingleDay extends Component {
         <table>
           <thead>
             <tr>
-              <th colSpan="3">
-                <span className="heading">Logs for {this.state.searchTerm}</span>
-              </th>
+              <th colSpan="3">Logs for <span>{this.state.searchTerm}</span></th>
             </tr>
-            <tr>
+            <tr className="subheading">
               <th>Name <span className="description">(sorted a-z)</span></th>
               <th>Time In</th>
               <th>Time Out</th>
