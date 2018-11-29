@@ -41,8 +41,10 @@ const registerForm = (props) => (
       placeholder="Parent/guardian cell phone #"
       value={props.state.parentPhone} />
 
+    <label htmlFor="agree">Check to agree:</label>
     <input 
       type="checkbox" 
+      name="agree"
       value={props.state.agree} 
       onChange={props.toggleCheckbox} /><span className="checkbox-text">I have received the rules for the Benicia Teen Center and agree to follow them</span><br/>
 
