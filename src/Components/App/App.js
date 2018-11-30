@@ -69,6 +69,7 @@ class App extends Component {
     return (
       <Layout 
         user={this.state.user}
+        account={this.state.account}
         setAccount={this.setAccount}
         message={this.state.message}
         setMessage={this.setMessage} >

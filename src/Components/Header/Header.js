@@ -7,6 +7,7 @@ const header = (props) => (
     <p className="subheader">Powered by the Kyle Hyland Foundation for Teen Support</p>
     <Authorize 
       user={props.user} 
+      account={props.account}
       setAccount={props.setAccount}
       message={props.message}
       setMessage={props.setMessage} />

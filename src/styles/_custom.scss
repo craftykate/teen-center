@@ -39,6 +39,18 @@
 			position: absolute;
 			transform: translate(0, 15px);
 		}
+		ul {
+			position: relative;
+			li {
+				display: inline;
+				&:not(:first-child) {
+					&::before {
+						content: " | ";
+						color: $main;
+					}
+				}
+			}
+		}
 	}
 //*============ END HEADER ============*/
 

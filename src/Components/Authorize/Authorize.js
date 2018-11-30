@@ -35,12 +35,21 @@ class Authorize extends Component {
     fire.auth().signOut();
     if (this.props.message) this.props.setMessage('');
   }
+
+  // switch from admin to student account
+  switchToStudent = () => {
+    this.props.setAccount('student');
+  }
   
   render() {
     // show login form or logout link depending on user login state
     let logInOut = null;
+    let switchAccounts = null;
     if (this.props.user) {
-      logInOut = <a onClick={this.logout}>log out admin</a> /* eslint-disable-line */
+      logInOut = <li><a onClick={this.logout}>log out admin</a></li> /* eslint-disable-line */
+      if (this.props.account === 'admin') {
+        switchAccounts = <li><a onClick={this.switchToStudent}>switch to student sign-in</a></li> /* eslint-disable-line */
+      }
     } else {
       logInOut = (
         <AuthorizeForm 
@@ -52,7 +61,10 @@ class Authorize extends Component {
 
     return (
       <React.Fragment>
-        {logInOut}
+        <ul>
+          {switchAccounts}
+          {logInOut}
+        </ul>
       </React.Fragment>
     )
   }
