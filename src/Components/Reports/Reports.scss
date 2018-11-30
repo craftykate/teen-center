@@ -15,6 +15,24 @@
     }
   }
 
+  #alphabet {
+    display: grid;
+    grid-template-columns: 12.6% 12.6% 12.6% 12.6% 12.6% 12.6% 12.6%;
+    grid-column-gap: 2%;
+    grid-row-gap: 10px;
+    li {
+      padding: 5px;
+      text-align: center;
+      border: 1px solid $accent;
+      border-radius: 5px;
+      &.active, &:hover {
+        background-color: $accent;
+        color: white;
+        cursor: pointer;
+      }
+    }
+  }
+
   table {
     margin: 20px 0 0 0;
     width: 100%;

@@ -92,9 +92,9 @@ class DateRange extends Component {
   }
 
   render() {
-    let data = null;
+    let results = null;
     if (this.state.students) {
-      data = (
+      results = (
         <DateRangeData
           fromString={this.formatDate(this.state.fromString)}
           toString={this.formatDate(this.state.toString)}
@@ -123,7 +123,7 @@ class DateRange extends Component {
             value={this.state.to} />
           <button onClick={this.getDateRangeData}>Run Report</button>
         </form>
-        {data}
+        {results}
       </div>
     )
   }
