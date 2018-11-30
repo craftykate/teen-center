@@ -22,19 +22,6 @@
     th, td {
       border-color: $accent;
     }
-    thead {
-      font-size: 1.2em;
-      font-weight: normal;
-      span {
-        font-weight: bold;
-      }
-      tr.subheading {
-        font-size: .9em;
-        span.description {
-          font-weight: normal;
-        }
-      }
-    }
     tbody {
       span {
         font-weight: bold;
@@ -42,7 +29,6 @@
       tr {
         td {
           font-weight: normal;
-          // width: 50%;
         }
       }
     }

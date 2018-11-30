@@ -58,7 +58,7 @@ class DateRange extends Component {
           const calculatedAverages = {};
           for (let day in averages) {
             if (averages[day].weekNums !== 0) {
-              calculatedAverages[day] = averages[day].visits / averages[day].weekNums;
+              calculatedAverages[day] = Math.round(averages[day].visits / averages[day].weekNums);
             } else {
               calculatedAverages[day] = 0;
             }

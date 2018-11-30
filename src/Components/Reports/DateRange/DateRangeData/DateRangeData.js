@@ -5,7 +5,7 @@ const dateRangeData = (props) => (
     <table>
       <thead>
         <tr>
-          <th colSpan="2">From <span>{props.fromString}</span> to <span>{props.toString}</span></th>
+          <th colSpan="2" className="heading">From <strong>{props.fromString}</strong> to <strong>{props.toString}</strong></th>
         </tr>
       </thead>
       <tbody>

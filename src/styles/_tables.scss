@@ -17,16 +17,20 @@
 		thead {
 			font-weight: bold;
 			font-size: .9em;
-			span.heading {
+			th.heading {
+				font-weight: normal;
 				font-size: 1.4em;
+			}
+			span.heading-note {
+				display: block;
+				margin-top: 5px;
+				font-weight: normal;
+				font-size: .75em;
+				color: lighten($text, 20%);
 			}
 			span.description {
 				font-weight: normal;
 				color: lighten($text, 20%);
-				&.block {
-					display: block;
-					margin-top: 5px;
-				}
 			}
 			th:first-child {
 				width: 56%;

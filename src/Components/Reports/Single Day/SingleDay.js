@@ -5,6 +5,7 @@ import utilities from '../../../utils/utilities';
 class SingleDay extends Component {
   state = {
     searchTerm: '',
+    dateString: '',
     students: {}
   }
 
@@ -37,11 +38,16 @@ class SingleDay extends Component {
     e.preventDefault(); 
     if (this.state.searchTerm) {
       if (this.props.message) this.props.setMessage('');
-      const date = utilities.getDateInfo(this.state.searchTerm).link;
+      const date = utilities.getDateInfo(this.state.searchTerm);
       utilities.getToken().then(token => {
-        axios.get(`/logs/${date}.json?auth=${token}`).then(students => {
+        axios.get(`/logs/${date.link}.json?auth=${token}`).then(students => {
           console.log('/logs');
-          this.setState({ students: students.data })
+          // convert search term to readable date
+          const dateString = `${date.weekdayName.slice(0,3)}, ${date.monthName.slice(0,3)} ${date.day} ${date.year}`
+          this.setState({ 
+            students: students.data,
+            dateString
+          })
           if (students.data === null) this.props.setMessage('No records for that date');
         })
       })
@@ -75,9 +81,9 @@ class SingleDay extends Component {
         <table>
           <thead>
             <tr>
-              <th colSpan="3">Logs for <span>{this.state.searchTerm}</span></th>
+              <th colSpan="3" className="heading">{studentList.length} students for <strong>{this.state.dateString}</strong></th>
             </tr>
-            <tr className="subheading">
+            <tr>
               <th>Name <span className="description">(sorted a-z)</span></th>
               <th>Time In</th>
               <th>Time Out</th>

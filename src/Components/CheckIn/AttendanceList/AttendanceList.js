@@ -64,15 +64,15 @@ const attendanceList = (props) => {
       studentCount = `${currentStudents.length} students`
       break;
   }
-  const todayHeading = `${todaysDate.weekdayName}, ${abbrMonth} ${todaysDate.day} - ${studentCount}`;
+  const todayHeading = `${todaysDate.weekdayName}, ${abbrMonth} ${todaysDate.day}`;
 
   return (
     <table>
       <thead>
         <tr>
-          <th colSpan="3">
-            <span className="heading">{todayHeading}</span>
-            <span className="description block">(<a onClick={props.refreshStudentList}>refresh</a> if you don't see your name)</span>{/* eslint-disable-line */}
+          <th colSpan="3" className="heading">
+            <strong>{todayHeading}</strong>  - {studentCount}
+            <span className="heading-note">(<a onClick={props.refreshStudentList}>refresh</a> if you don't see your name)</span>{/* eslint-disable-line */}
           </th>
         </tr>
         <tr>
@@ -86,7 +86,7 @@ const attendanceList = (props) => {
       </tbody>
       <tfoot>
         <tr>
-          <td colSpan="3">Sign someone out by accident? Click their sign out time to undo</td>
+          <td colSpan="3">Click your sign out time to sign back in</td>
         </tr>
       </tfoot>
     </table>
