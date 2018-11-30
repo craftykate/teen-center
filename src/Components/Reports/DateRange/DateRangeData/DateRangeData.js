@@ -10,7 +10,7 @@ const dateRangeData = (props) => (
       </thead>
       <tbody>
         <tr>
-          <td >Total # Students: <span>{props.students}</span></td>
+          <td className="half">Total # Students: <span>{props.students}</span></td>
           <td>Total # Visits: <span>{props.visits}</span></td>
         </tr>
       </tbody>

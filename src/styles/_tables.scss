@@ -13,6 +13,9 @@
 			&:first-child {
 				border-left: 1px solid $main;
 			}
+			&.half {
+				width: 50%;
+			}
 		}
 		thead {
 			font-weight: bold;
