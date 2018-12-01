@@ -101,6 +101,7 @@ class SingleDay extends Component {
         <form autoComplete="off">
           <label htmlFor="date">Enter date:</label>
           <input type="text" autoFocus
+            name="date"
             className="inline"
             onChange={this.handleTermChange}
             placeholder="mm/dd/yyyy"
