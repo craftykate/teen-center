@@ -7,7 +7,8 @@ class StudentInfo extends Component {
   state = {
     letter: '',
     endLetter: null,
-    students: {}
+    students: {},
+    numUnverified: null
   }
 
   getStudents = (start, end) => {
@@ -59,6 +60,7 @@ class StudentInfo extends Component {
         this.setState({
           letter: 'unverified',
           endLetter: null,
+          numUnverified: studentArray.length,
           students
         });
         // if the range came up empty display error message
@@ -80,6 +82,7 @@ class StudentInfo extends Component {
   updateRecord = (updatedInfo, id, field) => {
     utilities.getToken().then(token => {
       const link = `/students/id-${id}/${field}`;
+      // unverifying a student's info
       if (field === 'verified' && updatedInfo === false) {
         axios.delete(`${link}.json?auth=${token}`).then(response => {
           if (response.status === 200) {
@@ -111,6 +114,16 @@ class StudentInfo extends Component {
         })
       }
     })
+    if (field === 'verified' && this.state.numUnverified !== null) {
+      let prevNum = this.state.numUnverified;
+      if (updatedInfo === true) {
+        let newNum = prevNum - 1;
+        this.setState({ numUnverified: newNum})
+      } else {
+        let newNum = prevNum + 1;
+        this.setState({ numUnverified: newNum})
+      }
+    }
   }
 
   render() {
@@ -201,7 +214,7 @@ class StudentInfo extends Component {
             <li className={this.setStyle('X')} onClick={() => this.getStudents("X", "Y")}>X</li>
             <li className={this.setStyle('Y')} onClick={() => this.getStudents("Y", "Z")}>Y</li>
             <li className={this.setStyle('Z')} onClick={() => this.getStudents("Z", null)}>Z</li>
-            <li className={this.setStyle('unverified')} onClick={this.getUnverifiedStudents}>Unverified</li>
+            <li className={this.setStyle('unverified')} onClick={this.getUnverifiedStudents}>{this.state.numUnverified} Unverified</li>
           </ul>
         </form>
         {results}
