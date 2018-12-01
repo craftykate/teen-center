@@ -24,31 +24,31 @@ const dateRangeData = (props) => (
       <tbody>
         <tr>
           <td>Monday</td>
-          <td><span>{props.averages[0]}</span></td>
-        </tr>
-        <tr>
-          <td>Tuesday</td>
           <td><span>{props.averages[1]}</span></td>
         </tr>
         <tr>
-          <td>Wednesday</td>
+          <td>Tuesday</td>
           <td><span>{props.averages[2]}</span></td>
         </tr>
         <tr>
-          <td>Thursday</td>
+          <td>Wednesday</td>
           <td><span>{props.averages[3]}</span></td>
         </tr>
         <tr>
-          <td>Friday</td>
+          <td>Thursday</td>
           <td><span>{props.averages[4]}</span></td>
         </tr>
         <tr>
-          <td>Saturday</td>
+          <td>Friday</td>
           <td><span>{props.averages[5]}</span></td>
         </tr>
         <tr>
-          <td>Sunday</td>
+          <td>Saturday</td>
           <td><span>{props.averages[6]}</span></td>
+        </tr>
+        <tr>
+          <td>Sunday</td>
+          <td><span>{props.averages[0]}</span></td>
         </tr>
       </tbody>
     </table>
