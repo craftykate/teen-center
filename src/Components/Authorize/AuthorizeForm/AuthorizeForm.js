@@ -2,7 +2,7 @@ import React from 'react';
 
 // log in form
 const authorizeForm = (props) => (
-  <form>
+  <form autoComplete="off">
     <input
       value={props.state.email}
       onChange={props.handleTermChange}

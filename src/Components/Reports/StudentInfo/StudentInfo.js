@@ -18,8 +18,7 @@ class StudentInfo extends Component {
         // get students whose names start with the letters in the range
         const link = `/students.json?auth=${token}&orderBy="name"&startAt="${start}"&endAt="${end}"`;
         axios.get(link).then(studentData => {
-          console.log('students');
-          console.log(studentData.data);
+          console.log('getting students by letter');
           // save the results and the current letter
           const students = {...this.state.students}
           students[start] = studentData.data;
@@ -52,7 +51,6 @@ class StudentInfo extends Component {
   }
 
   updateRecord = (updatedInfo, id, field) => {
-    console.log(updatedInfo)
     utilities.getToken().then(token => {
       const link = `/students/${id}/${field}`;
       axios.put(`${link}.json?auth=${token}`, JSON.stringify(updatedInfo)).then(response => {

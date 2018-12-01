@@ -5,7 +5,7 @@ const registerForm = (props) => (
   <form autoComplete="off">
     <h2>Register New Student</h2>
     <label htmlFor="id">Careful - your ID can't be changed!</label>
-    <input type="text"
+    <input type="text" autoFocus
       name="id"
       onChange={(e) => props.updateField(e, 'id')}
       placeholder="Your school ID #"

@@ -142,6 +142,7 @@ nav {
 			align-items: center;
 			text-align: center;
 			cursor: pointer;
+			transition: all .20s;
 			&.active, &:hover {
 				background-color: $accent;
 				color: white;

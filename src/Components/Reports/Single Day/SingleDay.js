@@ -100,7 +100,7 @@ class SingleDay extends Component {
       <React.Fragment>
         <form autoComplete="off">
           <label htmlFor="date">Enter date:</label>
-          <input type="text"
+          <input type="text" autoFocus
             className="inline"
             onChange={this.handleTermChange}
             placeholder="mm/dd/yyyy"

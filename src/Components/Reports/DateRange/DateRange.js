@@ -108,7 +108,7 @@ class DateRange extends Component {
       <div id="date-range">
         <form autoComplete="off">
           <label>Start Date:</label>
-          <input type="text"
+          <input type="text" autoFocus
             name="from"
             className="small inline"
             onChange={(e) => this.updateField(e, 'from')}

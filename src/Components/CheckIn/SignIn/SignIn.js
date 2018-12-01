@@ -90,7 +90,7 @@ class SignIn extends Component {
       // sign in form
       signInOrUp = (
         <form autoComplete="off">
-          <input type="text"
+          <input type="text" autoFocus
             name="id"
             className="inline"
             onChange={this.handleTermChange}

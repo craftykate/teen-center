@@ -42,15 +42,15 @@ class CheckIn extends Component {
             };
             const dateInfo = utilities.getDateInfo(new Date());
             this.signIn(student, dateInfo);
-            // set success message
-            let msg = signInMethod === 'regAndSignIn' ?
-              `You successfully registered and signed in for today`
-              : `You successfully registered and are NOT signed in for today`;
-            this.props.setMessage(msg);
-            setTimeout(() => {
-              this.props.setMessage('');
-            }, 5000);
           }
+          // set success message
+          let msg = signInMethod === 'regAndSignIn' ?
+            `You successfully registered and signed in for today` 
+            : `You successfully registered and are NOT signed in for today`;
+          this.props.setMessage(msg);
+          setTimeout(() => {
+            this.props.setMessage('');
+          }, 5000);
         // error signing in
         } else {
           this.props.setMessage('Oops, there was an error with the database, try again');
