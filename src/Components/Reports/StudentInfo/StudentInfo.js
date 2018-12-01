@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
 import axios from '../../../utils/axios';
 import utilities from '../../../utils/utilities';
+import StudentItem from './StudentItem/StudentItem';
 
 class StudentInfo extends Component {
   state = {
     letter: '',
+    endLetter: null,
     students: {}
   }
 
@@ -23,6 +25,7 @@ class StudentInfo extends Component {
           students[start] = studentData.data;
           this.setState({ 
             letter: start,
+            endLetter: end,
             students
           })
           // if the range came up empty display error message
@@ -33,7 +36,10 @@ class StudentInfo extends Component {
       })
     // there are already saved under that letter so switch to that letter
     } else {
-      this.setState({ letter: start })
+      this.setState({ 
+        letter: start,
+        endLetter: end
+      })
       // check if there are matching student records
       if (Object.keys(this.state.students[start]).length === 0) {
         this.props.setMessage('No matching students found');
@@ -45,15 +51,76 @@ class StudentInfo extends Component {
     return (letter === this.state.letter) ? 'active' : null;
   }
 
+  updateRecord = (updatedInfo, id, field) => {
+    console.log(updatedInfo)
+    utilities.getToken().then(token => {
+      const link = `/students/${id}/${field}`;
+      axios.put(`${link}.json?auth=${token}`, JSON.stringify(updatedInfo)).then(response => {
+        console.log('modifying student');
+        if (response.status === 200) {
+          const updatedStudents = {...this.state.students};
+          updatedStudents[this.state.letter][id][field] = updatedInfo;
+          this.setState({ students: updatedStudents });
+          this.props.setMessage(`Update successful!`);
+          setTimeout(() => {
+            this.props.setMessage('');
+          }, 5000);
+        }
+      })
+    })
+  }
+
   render() {
-    let results = null;
+    let results = [];
     const students = {...this.state.students};
     const letter = this.state.letter;
     if (students[letter] !== undefined) {
       if (Object.keys(students[letter]).length > 0) {
-        results = <p>there are students</p>
+        for (let studentKey in students[letter]) {
+          results.push([
+            <form id="results" key={studentKey}>
+              <label htmlFor="name">ID: {students[letter][studentKey].id}</label>
+              <StudentItem 
+                field="name"
+                content={students[letter][studentKey].name}
+                updateRecord={this.updateRecord}
+                studentKey={studentKey} />
+              <label htmlFor="phone">Student Phone:</label>
+              <StudentItem
+                field="phone"
+                content={students[letter][studentKey].phone}
+                updateRecord={this.updateRecord}
+                studentKey={studentKey} />
+              <label htmlFor="school">School:</label>
+              <StudentItem
+                field="school"
+                content={students[letter][studentKey].school}
+                updateRecord={this.updateRecord}
+                studentKey={studentKey} />
+              <label htmlFor="year">Grad Year:</label>
+              <StudentItem
+                field="year"
+                content={students[letter][studentKey].year}
+                updateRecord={this.updateRecord}
+                studentKey={studentKey} />
+              <label htmlFor="parents">Parents:</label>
+              <StudentItem
+                field="parents"
+                content={students[letter][studentKey].parents}
+                updateRecord={this.updateRecord}
+                studentKey={studentKey} />
+              <label htmlFor="parentPhone">Parent Phone:</label>
+              <StudentItem
+                field="parentPhone"
+                content={students[letter][studentKey].parentPhone}
+                updateRecord={this.updateRecord}
+                studentKey={studentKey} />
+            </form>
+          ])
+        }
       }
     }
+    
     return (
       <React.Fragment>
         <form>
