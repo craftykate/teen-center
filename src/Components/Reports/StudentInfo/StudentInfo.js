@@ -46,25 +46,70 @@ class StudentInfo extends Component {
     }
   }
 
+  getUnverifiedStudents = () => {
+    if (this.props.message) this.props.setMessage('');
+    utilities.getToken().then(token => {
+      const link = `/students.json?auth=${token}&orderBy="verified"&equalTo=null`;
+      axios.get(link).then(studentData => {
+        console.log('getting unverified students');
+        let studentArray = Object.keys(studentData.data).map(key => studentData.data[key]);
+        studentArray.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
+        const students = {};
+        students['unverified'] = studentArray;
+        this.setState({
+          letter: 'unverified',
+          endLetter: null,
+          students
+        });
+        // if the range came up empty display error message
+        if (Object.keys(studentData.data).length === 0) {
+          this.props.setMessage('No matching students found');
+        }
+      })  
+    })
+  }
+
   setStyle = (letter) => {
-    return (letter === this.state.letter) ? 'active' : null;
+    if (letter === 'unverified') {
+      return (this.state.letter === 'unverified') ? 'active unverified' : 'unverified';
+    } else {
+      return (letter === this.state.letter) ? 'active' : null;
+    }
   }
 
   updateRecord = (updatedInfo, id, field) => {
     utilities.getToken().then(token => {
-      const link = `/students/${id}/${field}`;
-      axios.put(`${link}.json?auth=${token}`, JSON.stringify(updatedInfo)).then(response => {
-        console.log('modifying student');
-        if (response.status === 200) {
-          const updatedStudents = {...this.state.students};
-          updatedStudents[this.state.letter][id][field] = updatedInfo;
-          this.setState({ students: updatedStudents });
-          this.props.setMessage(`Update successful!`);
-          setTimeout(() => {
-            this.props.setMessage('');
-          }, 5000);
-        }
-      })
+      const link = `/students/id-${id}/${field}`;
+      if (field === 'verified' && updatedInfo === false) {
+        axios.delete(`${link}.json?auth=${token}`).then(response => {
+          if (response.status === 200) {
+            if (this.state.letter !== 'unverified') {
+              const updatedStudents = { ...this.state.students };
+              updatedStudents[this.state.letter][`id-${id}`][field] = updatedInfo;
+              this.setState({ students: updatedStudents });
+              this.props.setMessage(`Update successful!`);
+              setTimeout(() => {
+                this.props.setMessage('');
+              }, 5000);
+            }
+          }
+        })
+      } else if ((field === 'verified' && updatedInfo === true) || field !== 'verified') {
+        axios.put(`${link}.json?auth=${token}`, JSON.stringify(updatedInfo)).then(response => {
+          console.log('modifying student');
+          if (response.status === 200) {
+            if (this.state.letter !== 'unverified') {
+              const updatedStudents = {...this.state.students};
+              updatedStudents[this.state.letter][`id-${id}`][field] = updatedInfo;
+              this.setState({ students: updatedStudents });
+              this.props.setMessage(`Update successful!`);
+              setTimeout(() => {
+                this.props.setMessage('');
+              }, 5000);
+            }
+          }
+        })
+      }
     })
   }
 
@@ -73,7 +118,7 @@ class StudentInfo extends Component {
     const students = {...this.state.students};
     const letter = this.state.letter;
     if (students[letter] !== undefined) {
-      if (Object.keys(students[letter]).length > 0) {
+      if (this.state.letter === 'unverified' || Object.keys(students[letter]).length > 0) {
         for (let studentKey in students[letter]) {
           results.push([
             <form id="results" key={studentKey}>
@@ -82,37 +127,43 @@ class StudentInfo extends Component {
                 field="name"
                 content={students[letter][studentKey].name}
                 updateRecord={this.updateRecord}
-                studentKey={studentKey} />
+                id={students[letter][studentKey].id} />
               <label htmlFor="phone">Student Phone:</label>
               <StudentItem
                 field="phone"
                 content={students[letter][studentKey].phone}
                 updateRecord={this.updateRecord}
-                studentKey={studentKey} />
+                id={students[letter][studentKey].id} />
               <label htmlFor="school">School:</label>
               <StudentItem
                 field="school"
                 content={students[letter][studentKey].school}
                 updateRecord={this.updateRecord}
-                studentKey={studentKey} />
+                id={students[letter][studentKey].id} />
               <label htmlFor="year">Grad Year:</label>
               <StudentItem
                 field="year"
                 content={students[letter][studentKey].year}
                 updateRecord={this.updateRecord}
-                studentKey={studentKey} />
+                id={students[letter][studentKey].id} />
               <label htmlFor="parents">Parents:</label>
               <StudentItem
                 field="parents"
                 content={students[letter][studentKey].parents}
                 updateRecord={this.updateRecord}
-                studentKey={studentKey} />
+                id={students[letter][studentKey].id} />
               <label htmlFor="parentPhone">Parent Phone:</label>
               <StudentItem
                 field="parentPhone"
                 content={students[letter][studentKey].parentPhone}
                 updateRecord={this.updateRecord}
-                studentKey={studentKey} />
+                id={students[letter][studentKey].id} />
+              <label htmlFor="verified">Verified?</label>
+              <StudentItem
+                field="verified"
+                content={students[letter][studentKey].verified}
+                updateRecord={this.updateRecord}
+                id={students[letter][studentKey].id} />
             </form>
           ])
         }
@@ -139,12 +190,18 @@ class StudentInfo extends Component {
             <li className={this.setStyle('M')} onClick={() => this.getStudents("M", "N")}>M</li>
             <li className={this.setStyle('N')} onClick={() => this.getStudents("N", "O")}>N</li>
             <li className={this.setStyle('O')} onClick={() => this.getStudents("O", "P")}>O</li>
-            <li className={this.setStyle('P')} onClick={() => this.getStudents("P", "R")}>P/Q</li>
+            <li className={this.setStyle('P')} onClick={() => this.getStudents("P", "Q")}>P</li>
+            <li className={this.setStyle('Q')} onClick={() => this.getStudents("Q", "R")}>Q</li>
             <li className={this.setStyle('R')} onClick={() => this.getStudents("R", "S")}>R</li>
             <li className={this.setStyle('S')} onClick={() => this.getStudents("S", "T")}>S</li>
             <li className={this.setStyle('T')} onClick={() => this.getStudents("T", "U")}>T</li>
-            <li className={this.setStyle('U')} onClick={() => this.getStudents("U", "X")}>U/V/W</li>
-            <li className={this.setStyle('Y')} onClick={() => this.getStudents("Y", null)}>X/Y/Z</li>
+            <li className={this.setStyle('U')} onClick={() => this.getStudents("U", "V")}>U</li>
+            <li className={this.setStyle('V')} onClick={() => this.getStudents("V", "W")}>V</li>
+            <li className={this.setStyle('W')} onClick={() => this.getStudents("W", "X")}>W</li>
+            <li className={this.setStyle('X')} onClick={() => this.getStudents("X", "Y")}>X</li>
+            <li className={this.setStyle('Y')} onClick={() => this.getStudents("Y", "Z")}>Y</li>
+            <li className={this.setStyle('Z')} onClick={() => this.getStudents("Z", null)}>Z</li>
+            <li className={this.setStyle('unverified')} onClick={this.getUnverifiedStudents}>Unverified</li>
           </ul>
         </form>
         {results}

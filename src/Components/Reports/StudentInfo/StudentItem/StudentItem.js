@@ -2,12 +2,7 @@ import React, {Component} from 'react';
 
 class StudentItem extends Component {
   state = {
-    updatedContent: this.props.content,
-    editable: false
-  }
-
-  makeEditable = () => {
-    this.setState({ editable: !this.state.editable })
+    updatedContent: this.props.content
   }
 
   // update state with contents of input field
@@ -16,23 +11,39 @@ class StudentItem extends Component {
     if (this.props.message) this.props.setMessage('');
   }
 
+  toggleVerified = (e) => {
+    this.setState({ updatedContent: e.target.checked })
+    this.props.updateRecord(e.target.checked, this.props.id, this.props.field);
+  }
+
   sendUpdate = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       e.target.blur();
-      this.setState({ editable: !this.state.editable })
-      this.props.updateRecord(e.target.value, this.props.studentKey, this.props.field);
+      this.props.updateRecord(e.target.value, this.props.id, this.props.field);
     }
   }
 
   render() {
-    return (
-      <React.Fragment>
+    let inputField = null;
+    if (this.props.field === 'verified') {
+      inputField = (
+        <input type="checkbox"
+          onChange={(e) => this.toggleVerified(e)}
+          checked={!!this.state.updatedContent} />
+      )
+    } else {
+      inputField = (
         <input type="text"
           className={this.props.field}
           onChange={this.handleTermChange}
           onKeyPress={(e) => this.sendUpdate(e)}
-          value={this.state.updatedContent} />
+          defaultValue={this.state.updatedContent} />
+      )
+    }
+    return (
+      <React.Fragment>
+        {inputField}
       </React.Fragment>
     )
   }

@@ -32,6 +32,9 @@
         color: white;
         cursor: pointer;
       }
+      &.unverified {
+        grid-column: 6 / span 2;
+      }
     }
   }
 
