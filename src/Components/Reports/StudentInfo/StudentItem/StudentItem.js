@@ -32,6 +32,14 @@ class StudentItem extends Component {
           onChange={(e) => this.toggleVerified(e)}
           checked={!!this.state.updatedContent} />
       )
+    } else if (this.props.field === 'notes') {
+      inputField = (
+        <textarea type="text"
+          className={this.props.field}
+          onChange={this.handleTermChange}
+          onKeyPress={(e) => this.sendUpdate(e)}
+          defaultValue={this.state.updatedContent} />
+      )
     } else {
       inputField = (
         <input type="text"

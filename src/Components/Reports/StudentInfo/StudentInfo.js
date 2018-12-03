@@ -171,6 +171,12 @@ class StudentInfo extends Component {
                 content={students[letter][studentKey].parentPhone}
                 updateRecord={this.updateRecord}
                 id={students[letter][studentKey].id} />
+              <label htmlFor="notes">Notes:</label>
+              <StudentItem
+                field="notes"
+                content={students[letter][studentKey].notes}
+                updateRecord={this.updateRecord}
+                id={students[letter][studentKey].id} />
               <label htmlFor="verified">Verified?</label>
               <StudentItem
                 field="verified"

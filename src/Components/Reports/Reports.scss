@@ -47,7 +47,7 @@
       align-items: center;
       color: lighten($accent, 10%);
     }
-    input {
+    input, textarea {
       margin-bottom: 3px;
       width: 98%;
       grid-column: 2;
