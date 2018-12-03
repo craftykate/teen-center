@@ -34,27 +34,31 @@ class Register extends Component {
     if (this.state.id && this.state.name && this.state.phone && this.state.school && this.state.year && this.state.parents && this.state.parentPhone && this.state.agree) {
       const firstLetter = this.state.name.charAt(0).toUpperCase();
       if (/[A-Z]/.test(firstLetter)) {
-        // take out irrelevant fields
-        const student = { ...this.state };
-        delete student.agree;
-        // capitalize first name
-        const name = student.name;
-        const capName = name.charAt(0).toUpperCase() + name.slice(1);
-        student.name = capName;
-        utilities.getToken().then(token => {
-          // check if id already exists in database
-          utilities.doesIDExist(token, `/students.json`, student.id).then(exists => {
-            // id is NOT in database already so register student
-            if (!exists) {
-              this.props.register(student, signInMethod);
-            // id IS in database
-            } else {
-              this.props.setMessage("That ID has already been registered")
-            }
-          }).catch(error => this.props.setMessage(error.message)); // something happened checking student ids
-        }).catch(error => this.props.setMessage(error.message)); // something happened verifying user
+        if (/^\d+$/.test(this.state.year) && this.state.year.length === 4) {
+          // take out irrelevant fields
+          const student = { ...this.state };
+          delete student.agree;
+          // capitalize first name
+          const name = student.name;
+          const capName = name.charAt(0).toUpperCase() + name.slice(1);
+          student.name = capName;
+          utilities.getToken().then(token => {
+            // check if id already exists in database
+            utilities.doesIDExist(token, `/students.json`, student.id).then(exists => {
+              // id is NOT in database already so register student
+              if (!exists) {
+                this.props.register(student, signInMethod);
+              // id IS in database
+              } else {
+                this.props.setMessage("That ID has already been registered")
+              }
+            }).catch(error => this.props.setMessage(error.message)); // something happened checking student ids
+          }).catch(error => this.props.setMessage(error.message)); // something happened verifying user
+        } else {
+          this.props.setMessage("Enter a valid 4 digit graduation year")
+        }
       } else {
-        this.props.setMessage("Your name must start with an approved letter")
+        this.props.setMessage("Your name must start with an English alphabet letter")
       }
     // all fields weren't filled out
     } else {

@@ -71,9 +71,30 @@ class StudentInfo extends Component {
     })
   }
 
+  getOldStudents = () => {
+    if (this.props.message) this.props.setMessage('');
+    utilities.getToken().then(token => {
+      const year = utilities.getDateInfo(new Date()).year;
+      const link = `/students.json?auth=${token}&orderBy="year"&endAt="${year}"`;
+      axios.get(`${link}`).then(studentData => {
+        console.log('getting graduates');
+        console.log(studentData.data)
+        const students = {};
+        students['graduates'] = studentData.data;
+        this.setState({
+          letter: 'graduates',
+          endLetter: null,
+          students
+        })
+      })
+    })
+  }
+
   setStyle = (letter) => {
     if (letter === 'unverified') {
       return (this.state.letter === 'unverified') ? 'active unverified' : 'unverified';
+    } else if (letter === 'graduates') {
+      return (this.state.letter === 'graduates') ? 'active graduates' : 'graduates';
     } else {
       return (letter === this.state.letter) ? 'active' : null;
     }
@@ -216,10 +237,9 @@ class StudentInfo extends Component {
             <li className={this.setStyle('T')} onClick={() => this.getStudents("T", "U")}>T</li>
             <li className={this.setStyle('U')} onClick={() => this.getStudents("U", "V")}>U</li>
             <li className={this.setStyle('V')} onClick={() => this.getStudents("V", "W")}>V</li>
-            <li className={this.setStyle('W')} onClick={() => this.getStudents("W", "X")}>W</li>
-            <li className={this.setStyle('X')} onClick={() => this.getStudents("X", "Y")}>X</li>
-            <li className={this.setStyle('Y')} onClick={() => this.getStudents("Y", "Z")}>Y</li>
-            <li className={this.setStyle('Z')} onClick={() => this.getStudents("Z", null)}>Z</li>
+            <li className={this.setStyle('W')} onClick={() => this.getStudents("W", "Y")}>W/X</li>
+            <li className={this.setStyle('Y')} onClick={() => this.getStudents("Y", null)}>Y/Z</li>
+            <li className={this.setStyle('graduates')} onClick={this.getOldStudents}>Graduates</li>
             <li className={this.setStyle('unverified')} onClick={this.getUnverifiedStudents}>{this.state.numUnverified} Unverified</li>
           </ul>
         </form>
