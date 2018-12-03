@@ -1,17 +1,15 @@
 @import '../../styles/colors';
 
 #results {
-  #date-range {
-    form {
-      display: grid;
-      margin-bottom: 20px;
-      grid-template-columns:37% 37% 26%;
-      label {
-        grid-row: 1;
-      }
-      input, button {
-        grid-row: 2;
-      }
+  form.inline {
+    display: grid;
+    margin-bottom: 20px;
+    grid-template-columns:37% 37% 26%;
+    label {
+      grid-row: 1;
+    }
+    input, button {
+      grid-row: 2;
     }
   }
 
@@ -84,6 +82,16 @@
     &.half-size {
       float: left;
       width: 50%;
+    }
+  }
+
+  table#entered-students {
+    th, td {
+      width: auto;
+    }
+    .left {
+      text-align: left;
+      font-weight: bold;
     }
   }
 }

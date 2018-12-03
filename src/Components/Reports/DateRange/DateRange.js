@@ -105,8 +105,8 @@ class DateRange extends Component {
     }
 
     return (
-      <div id="date-range">
-        <form autoComplete="off">
+      <React.Fragment>
+        <form className="inline" autoComplete="off">
           <label>Start Date:</label>
           <input type="text" autoFocus
             name="from"
@@ -124,7 +124,7 @@ class DateRange extends Component {
           <button onClick={this.getDateRangeData}>Run Report</button>
         </form>
         {results}
-      </div>
+      </React.Fragment>
     )
   }
 };
