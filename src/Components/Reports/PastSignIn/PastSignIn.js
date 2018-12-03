@@ -95,6 +95,7 @@ class PastSignIn extends Component {
   }
 
   undo = (date, id, index) => {
+    if (this.props.message) this.props.setMessage('');
     utilities.getToken().then(token => {
       const dateLink = utilities.getDateInfo(date).link;
       const link = `/logs/${dateLink}/id-${id}.json`;
