@@ -74,7 +74,7 @@ class StudentInfo extends Component {
   getOldStudents = () => {
     if (this.props.message) this.props.setMessage('');
     utilities.getToken().then(token => {
-      const year = utilities.getDateInfo(new Date()).year;
+      const year = utilities.getDateInfo(new Date()).year - 1;
       const link = `/students.json?auth=${token}&orderBy="year"&endAt="${year}"`;
       axios.get(`${link}`).then(studentData => {
         console.log('getting graduates');
