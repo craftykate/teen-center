@@ -4,41 +4,48 @@ import React from 'react';
 const registerForm = (props) => (
   <form autoComplete="off">
     <h2>Register New Student</h2>
-    <label htmlFor="id">Careful - your ID can't be changed!</label>
+    <h3>No student will ever see anything except your name! <br/>All fields required.</h3>
+    <label htmlFor="id">Your school ID - <span className="highlight">Careful! Your ID can't be changed!</span></label>
     <input type="text" autoFocus
       name="id"
       onChange={(e) => props.updateField(e, 'id')}
-      placeholder="Your school ID #"
+      placeholder="School ID"
       value={props.state.id} />
 
+    <label>Your first and last name:</label>
     <input type="text"
       onChange={(e) => props.updateField(e, 'name')}
-      placeholder="Your first and last name"
+      placeholder="First AND last"
       value={props.state.name} />
 
+    <label>Your cell phone number:</label>
     <input type="text"
       onChange={(e) => props.updateField(e, 'phone')}
-      placeholder="Your cell phone #"
+      placeholder="(###) ###-####"
       value={props.state.phone} />
 
+    <label>Your current school:</label>
     <input type="text"
       onChange={(e) => props.updateField(e, 'school')}
-      placeholder="Current school"
+      placeholder="ex: BHS"
       value={props.state.school} />
 
+    <label>Your graduation year:</label>
     <input type="text"
       onChange={(e) => props.updateField(e, 'year')}
-      placeholder="Graduation year"
+      placeholder="yyyy"
       value={props.state.year} />
 
+    <label>Parent/guardian name(s):</label>
     <input type="text"
       onChange={(e) => props.updateField(e, 'parents')}
-      placeholder="Parent/guardian name(s)"
+      placeholder="First and last name(s)"
       value={props.state.parents} />
 
+    <label>Parent/guardian cell phone numbers:</label>
     <input type="text"
       onChange={(e) => props.updateField(e, 'parentPhone')}
-      placeholder="Parent/guardian cell phone #"
+      placeholder="(###) ###-####"
       value={props.state.parentPhone} />
 
     <label htmlFor="agree">Check to agree:</label>
