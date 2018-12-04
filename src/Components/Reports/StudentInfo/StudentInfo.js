@@ -78,7 +78,6 @@ class StudentInfo extends Component {
       const link = `/students.json?auth=${token}&orderBy="year"&endAt="${year}"`;
       axios.get(`${link}`).then(studentData => {
         console.log('getting graduates');
-        console.log(studentData.data)
         const students = {};
         students['graduates'] = studentData.data;
         this.setState({
@@ -147,13 +146,41 @@ class StudentInfo extends Component {
     }
   }
 
+  deleteStudent = (studentKey, name) => {
+    let delStudent = window.confirm(`Are you sure you want to delete ${name}?`);
+    if (delStudent) {
+      utilities.getToken().then(token => {
+        const link = `/students/${studentKey}`;
+        axios.delete(`${link}.json?auth=${token}`).then(response => {
+          if (response.status === 200) {
+            const updatedStudents = {...this.state.students};
+            delete updatedStudents[this.state.letter][studentKey];
+            this.setState({ students: updatedStudents });
+          }
+        })
+      })
+    } 
+  }
+
   render() {
+    let deleteBox = null;
+
     let results = [];
     const students = {...this.state.students};
     const letter = this.state.letter;
     if (students[letter] !== undefined) {
       if (this.state.letter === 'unverified' || Object.keys(students[letter]).length > 0) {
         for (let studentKey in students[letter]) {
+          if (this.state.letter === 'graduates') {
+            deleteBox = (
+              <React.Fragment>
+                <label htmlFor="delete">Delete Record?</label>
+                <input type="checkbox"
+                  checked={false}
+                  onChange={() => this.deleteStudent(studentKey, students[letter][studentKey].name)} />
+              </React.Fragment>
+            )
+          }
           results.push([
             <form id="results" key={studentKey}>
               <label htmlFor="name">ID: {students[letter][studentKey].id}</label>
@@ -204,10 +231,21 @@ class StudentInfo extends Component {
                 content={students[letter][studentKey].verified}
                 updateRecord={this.updateRecord}
                 id={students[letter][studentKey].id} />
+              {deleteBox}
             </form>
           ])
         }
       }
+    }
+
+    let instructions = null;
+    if (this.state.letter === 'graduates') {
+      instructions = (
+        <div className="instructions">
+          <p>Deleting students will NOT change past attendance logs - your reports will stay accurate and complete. Deleting students is recommended to lighten the load on the database and help keep it free.</p>
+          <p>Deleting students is permanent! You will be asked to confirm before it goes through. Once a student is deleted their ID can't be used again (to keep reports accurate). For this reason, you can only delete students who have graduated already. Any student whose graduation year is earlier than the current year will show up in this tab and will be eligible for deleting.</p>
+        </div>
+      )
     }
     
     return (
@@ -243,6 +281,7 @@ class StudentInfo extends Component {
             <li className={this.setStyle('unverified')} onClick={this.getUnverifiedStudents}>{this.state.numUnverified} Unverified</li>
           </ul>
         </form>
+        {instructions}
         {results}
       </React.Fragment>
     )

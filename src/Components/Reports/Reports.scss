@@ -97,4 +97,11 @@
       font-weight: bold;
     }
   }
+
+  .instructions {
+    p {
+      color: lighten($text, 20%);
+      font-size: .8em;
+    }
+  }
 }

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 
 class StudentItem extends Component {
   state = {
-    updatedContent: this.props.content
+      updatedContent: this.props.content
   }
 
   // update state with contents of input field
@@ -19,8 +19,17 @@ class StudentItem extends Component {
   sendUpdate = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      e.target.blur();
-      this.props.updateRecord(e.target.value, this.props.id, this.props.field);
+      if (this.props.field === 'year') {
+        if (/^\d+$/.test(e.target.value) && e.target.value.length === 4) {
+          e.target.blur();
+          this.props.updateRecord(e.target.value, this.props.id, this.props.field);
+        } else {
+          window.alert('NOT SAVED: Graduation year must be a four digit number');
+        }
+      } else {
+        e.target.blur();
+        this.props.updateRecord(e.target.value, this.props.id, this.props.field);
+      }
     }
   }
 
