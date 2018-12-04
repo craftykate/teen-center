@@ -71,9 +71,12 @@ form {
 		font-size: 1.8em;
 		margin-bottom: 25px;
 	}
+	.description {
+		margin-bottom: 20px;
+	}
 	h3 {
-		margin-bottom: 10px;
-		color: $accent;
+		margin-bottom: 5px;
+		color: $text;
 	}
 	input, textarea, button {
 		display: block;
@@ -129,6 +132,11 @@ form {
 		cursor: pointer;
 		&:hover {
 			background-color: darken($accent, 20%);
+		}
+	}
+	&.register {
+		label {
+			color: $accent;
 		}
 	}
 }

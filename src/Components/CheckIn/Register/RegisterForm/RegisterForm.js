@@ -2,10 +2,13 @@ import React from 'react';
 
 // fields to register new students
 const registerForm = (props) => (
-  <form autoComplete="off">
+  <form className="register" autoComplete="off">
     <h2>Register New Student</h2>
-    <h3>Only your name will be visible to other students. <br/>All fields required and will be reviewed by admin.</h3>
-    <label htmlFor="id">Your school ID - <span className="highlight">Careful! Your ID can't be changed!</span> This will be how you log in so make sure it's correct:</label>
+    <div className="description">
+      <h3>Only your name will be visible to other students. </h3>
+      <h3>All fields required and will be reviewed by admin.</h3>
+    </div>
+    <label htmlFor="id">Your school ID. This will be how you log in so make sure it's correct <br/> <span className="highlight">Careful! Your ID can't be changed!</span></label>
     <input type="text" autoFocus
       name="id"
       onChange={(e) => props.updateField(e, 'id')}
@@ -42,7 +45,7 @@ const registerForm = (props) => (
       placeholder="First and last name(s)"
       value={props.state.parents} />
 
-    <label>Parent/guardian cell phone numbers:</label>
+    <label>Parent/guardian cell phone number(s):</label>
     <input type="text"
       onChange={(e) => props.updateField(e, 'parentPhone')}
       placeholder="(###) ###-####"
