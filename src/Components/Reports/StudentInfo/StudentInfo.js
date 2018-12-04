@@ -78,6 +78,7 @@ class StudentInfo extends Component {
       const link = `/students.json?auth=${token}&orderBy="year"&endAt="${year}"`;
       axios.get(`${link}`).then(studentData => {
         console.log('getting graduates');
+        if (Object.keys(studentData.data).length === 0) this.props.setMessage('No matching students found');
         const students = {};
         students['graduates'] = studentData.data;
         this.setState({
@@ -156,6 +157,9 @@ class StudentInfo extends Component {
             const updatedStudents = {...this.state.students};
             delete updatedStudents[this.state.letter][studentKey];
             this.setState({ students: updatedStudents });
+            axios.put(`/graduates/${studentKey}.json?auth=${token}`, true).then(response => {
+              console.log(response.data);
+            })
           }
         })
       })

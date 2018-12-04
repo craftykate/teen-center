@@ -4,8 +4,8 @@ import React from 'react';
 const registerForm = (props) => (
   <form autoComplete="off">
     <h2>Register New Student</h2>
-    <h3>No student will ever see anything except your name! <br/>All fields required.</h3>
-    <label htmlFor="id">Your school ID - <span className="highlight">Careful! Your ID can't be changed!</span></label>
+    <h3>Only your name will be visible to other students. <br/>All fields required and will be reviewed by admin.</h3>
+    <label htmlFor="id">Your school ID - <span className="highlight">Careful! Your ID can't be changed!</span> This will be how you log in so make sure it's correct:</label>
     <input type="text" autoFocus
       name="id"
       onChange={(e) => props.updateField(e, 'id')}
@@ -15,7 +15,7 @@ const registerForm = (props) => (
     <label>Your first and last name:</label>
     <input type="text"
       onChange={(e) => props.updateField(e, 'name')}
-      placeholder="First AND last"
+      placeholder="First and last name"
       value={props.state.name} />
 
     <label>Your cell phone number:</label>

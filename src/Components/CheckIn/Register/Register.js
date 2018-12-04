@@ -45,13 +45,16 @@ class Register extends Component {
           utilities.getToken().then(token => {
             // check if id already exists in database
             utilities.doesIDExist(token, `/students.json`, student.id).then(exists => {
-              // id is NOT in database already so register student
-              if (!exists) {
-                this.props.register(student, signInMethod);
-              // id IS in database
-              } else {
-                this.props.setMessage("That ID has already been registered")
-              }
+              utilities.doesIDExist(token, `/graduates.json`, student.id).then(exists2 => {
+                // id is NOT in database already so register student
+                if (!exists && !exists2) {
+                  this.props.register(student, signInMethod);
+                // id IS in database
+                } else {
+                  this.props.setMessage("That ID has already been registered")
+                }
+
+              })
             }).catch(error => this.props.setMessage(error.message)); // something happened checking student ids
           }).catch(error => this.props.setMessage(error.message)); // something happened verifying user
         } else {
