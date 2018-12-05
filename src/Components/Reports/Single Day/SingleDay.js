@@ -33,24 +33,27 @@ class SingleDay extends Component {
     }
   }
 
-
   getDayInfo = (e) => {
     e.preventDefault(); 
     if (this.state.searchTerm) {
       if (this.props.message) this.props.setMessage('');
-      const date = utilities.getDateInfo(this.state.searchTerm);
-      utilities.getToken().then(token => {
-        axios.get(`/logs/${date.link}.json?auth=${token}`).then(students => {
-          console.log('/logs');
-          // convert search term to readable date
-          const dateString = `${date.weekdayName.slice(0,3)}, ${date.monthName.slice(0,3)} ${date.day} ${date.year}`
-          this.setState({ 
-            students: students.data,
-            dateString
+      if (utilities.validateDate(this.state.searchTerm)) {
+        const date = utilities.getDateInfo(this.state.searchTerm);
+        utilities.getToken().then(token => {
+          axios.get(`/logs/${date.link}.json?auth=${token}`).then(students => {
+            console.log('/logs');
+            // convert search term to readable date
+            const dateString = `${date.weekdayName.slice(0,3)}, ${date.monthName.slice(0,3)} ${date.day} ${date.year}`
+            this.setState({ 
+              students: students.data,
+              dateString
+            })
+            if (students.data === null) this.props.setMessage('No records for that date');
           })
-          if (students.data === null) this.props.setMessage('No records for that date');
         })
-      })
+      } else {
+        this.props.setMessage('Date format not valid');
+      }
     } else {
       this.props.setMessage('Enter a valid date');
     }

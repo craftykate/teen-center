@@ -22,6 +22,18 @@ const utilities = {
     }
   },
 
+  validateDate(dateString) {
+    const dateArr = dateString.split('/');
+    const month = parseInt(dateArr[0]);
+    const day = parseInt(dateArr[1]);
+    const year = parseInt(dateArr[2]);
+    if (dateArr.length === 3 && 1 <= month && month <= 12 && 1 <= day && day <= 31 && typeof year === 'number' && year.toString().length === 4) {
+      return true;
+    } else {
+      return false;
+    }
+  },
+
   // check if id exists at a certain link
   doesIDExist(token, link, ID) {
     return axios.get(`${link}?auth=${token}&shallow=true`).then(records => {

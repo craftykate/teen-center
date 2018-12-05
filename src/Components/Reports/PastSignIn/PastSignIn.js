@@ -22,7 +22,7 @@ class PastSignIn extends Component {
     // if both fields are filled out
     if (this.state.date && this.state.id) {
       // if the date field is valid
-      if (this.validateDate(this.state.date)) {
+      if (utilities.validateDate(this.state.date)) {
         utilities.getToken().then(token => {
           // if the students keys aren't saved, go get them
           if (this.state.studentKeys.length === 0) {
@@ -41,18 +41,6 @@ class PastSignIn extends Component {
       }
     } else {
       this.props.setMessage('Enter both date and ID!');
-    }
-  }
-
-  validateDate = (dateString) => {
-    const dateArr = dateString.split('/');
-    const month = parseInt(dateArr[0]);
-    const day = parseInt(dateArr[1]);
-    const year = parseInt(dateArr[2]);
-    if (dateArr.length === 3 && 1 <= month && month <= 12 && 1 <= day && day <= 31 && typeof year === 'number' && year.toString().length === 4) {
-      return true;
-    } else {
-      return false;
     }
   }
 
