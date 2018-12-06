@@ -1,18 +1,10 @@
 @import '../../styles/colors';
 
 #results {
-  form.inline {
-    display: grid;
-    margin-bottom: 20px;
-    grid-template-columns:37% 37% 26%;
-    label {
-      grid-row: 1;
-    }
-    input, button {
-      grid-row: 2;
-    }
+  .highlight {
+    color: $main;
   }
-
+  
   #alphabet {
     display: grid;
     grid-template-columns: 12.6% 12.6% 12.6% 12.6% 12.6% 12.6% 12.6%;
@@ -62,6 +54,18 @@
       &.name {
         font-weight: bold;
       }
+    }
+  }
+
+  form.inline {
+    display: grid;
+    margin-bottom: 20px;
+    grid-template-columns:37% 37% 26%;
+    label {
+      grid-row: 1;
+    }
+    input, button {
+      grid-row: 2;
     }
   }
 

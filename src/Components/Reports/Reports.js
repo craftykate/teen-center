@@ -7,7 +7,7 @@ import './Reports.css';
 
 class Reports extends Component {
   state = {
-    view: 'dateRange', // which "page" to look at
+    view: 'student', // which "page" to look at
     message: '' // admin-wide place for error and success messages
   }
 

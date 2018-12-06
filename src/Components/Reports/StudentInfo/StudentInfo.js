@@ -1,247 +1,167 @@
 import React, {Component} from 'react';
 import axios from '../../../utils/axios';
 import utilities from '../../../utils/utilities';
-import StudentItem from './StudentItem/StudentItem';
+import Alphabet from './Alphabet/Alphabet';
+import StudentResults from './StudentResults/StudentResults';
 
 class StudentInfo extends Component {
   state = {
     letter: '',
-    endLetter: null,
-    students: {},
+    students: [],
     numUnverified: null
   }
 
-  getStudents = (start, end) => {
+  getStudentsByLetter = (start, end) => {
+    utilities.getToken().then(token => {
+      const link = `/students.json?auth=${token}&orderBy="name"&startAt="${start}"&endAt="${end}\uf8ff"`
+      this.fetchStudents(start, link);
+    }).catch(error => console.log(error.message));
+  }
+
+  getOldStudents = () => {
+    utilities.getToken().then(token => {
+      const year = utilities.getDateInfo(new Date()).year - 1;
+      const link = `/students.json?auth=${token}&orderBy="year"&endAt="${year}"`;
+      this.fetchStudents('graduates', link);
+    }).catch(error => console.log(error.message));
+  }
+
+  getUnverifiedStudents = () => {
+    utilities.getToken().then(token => {
+      const link = `/students.json?auth=${token}&orderBy="verified"&equalTo=null`;
+      this.fetchStudents('unverified', link);
+    }).catch(error => console.log(error.message));
+  }
+
+  fetchStudents = (letter, link) => {
     if (this.props.message) this.props.setMessage('');
-    // if there aren't students already saved under that letter
-    if (this.state.students[start] === undefined) {
-      utilities.getToken().then(token => {
-        // get students whose names start with the letters in the range
-        const link = `/students.json?auth=${token}&orderBy="name"&startAt="${start}"&endAt="${end}"`;
-        axios.get(link).then(studentData => {
-          console.log('getting students by letter');
-          // save the results and the current letter
-          const students = {...this.state.students}
-          students[start] = studentData.data;
-          this.setState({ 
-            letter: start,
-            endLetter: end,
-            students
-          })
-          // if the range came up empty display error message
-          if (Object.keys(studentData.data).length === 0) {
-            this.props.setMessage('No matching students found');
-          }
-        })
-      })
-    // there are already saved under that letter so switch to that letter
-    } else {
-      this.setState({ 
-        letter: start,
-        endLetter: end
-      })
-      // check if there are matching student records
-      if (Object.keys(this.state.students[start]).length === 0) {
+    let students = [];
+    this.setState({
+      letter,
+      students
+    })
+    axios.get(link).then(studentData => {
+      console.log('getting students by letter');
+      // if students were found...
+      if (Object.keys(studentData.data).length > 0) {
+        // push all students from object into an array
+        for (let studentKey in studentData.data) {
+          students.push(studentData.data[studentKey]);
+        }
+        // sort the array
+        students.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
+        // no students found
+      } else {
         this.props.setMessage('No matching students found');
+      }
+      // set number of unverified students if on unverified tab
+      if (this.state.letter === 'unverified') {
+        this.setState({ numUnverified: students.length })
+      }
+      // add the student array to state
+      this.setState({ students });
+    }).catch(error => console.log(error.message));
+  }
+
+  updateRecord = (updatedInfo, id, field, index) => {
+    utilities.getToken().then(token => {
+      const link = `/students/id-${id}/${field}`;
+      // if unverifying a student's info
+      if (field === 'verified' && updatedInfo === false) {
+        // delete the verified field in database
+        axios.delete(`${link}.json?auth=${token}`).then(response => {
+          console.log('unverifying student');
+          if (response.status === 200) {
+            let updatedStudents = [...this.state.students];
+            updatedStudents[index][field] = updatedInfo;
+            this.setState({ students: updatedStudents });
+            this.props.setMessage(`Update successful!`);
+            setTimeout(() => {
+              this.props.setMessage('');
+            }, 5000);
+          } else {
+            this.props.setMessage('Oops, there was an error, please try again');
+          }
+        }).catch(error => console.log(error.message));
+      // anything besides unverifying student
+      } else {
+        axios.put(`${link}.json?auth=${token}`, JSON.stringify(updatedInfo)).then(response => {
+          console.log('modifying student');
+          if (response.status === 200) {
+            let updatedStudents = [...this.state.students];
+            updatedStudents[index][field] = updatedInfo;
+            this.setState({ students: updatedStudents });
+            this.props.setMessage(`Update successful!`);
+            setTimeout(() => {
+              this.props.setMessage('');
+            }, 5000);
+          } else {
+            this.props.setMessage('Oops, there was an error, please try again');
+          }
+        }).catch(error => console.log(error.message));
+      }
+    }).catch(error => console.log(error.message));
+    if (field === 'verified' && this.state.numUnverified !== null) {
+      let prevNum = this.state.numUnverified;
+      if (updatedInfo === true) {
+        let newNum = prevNum - 1;
+        this.setState({ numUnverified: newNum })
+      } else {
+        let newNum = prevNum + 1;
+        this.setState({ numUnverified: newNum })
       }
     }
   }
 
-  getUnverifiedStudents = () => {
-    if (this.props.message) this.props.setMessage('');
-    utilities.getToken().then(token => {
-      const link = `/students.json?auth=${token}&orderBy="verified"&equalTo=null`;
-      axios.get(link).then(studentData => {
-        console.log('getting unverified students');
-        let studentArray = Object.keys(studentData.data).map(key => studentData.data[key]);
-        studentArray.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
-        const students = {};
-        students['unverified'] = studentArray;
-        this.setState({
-          letter: 'unverified',
-          endLetter: null,
-          numUnverified: studentArray.length,
-          students
-        });
-        // if the range came up empty display error message
-        if (Object.keys(studentData.data).length === 0) {
-          this.props.setMessage('No matching students found');
-        }
-      })  
-    })
-  }
-
-  getOldStudents = () => {
-    if (this.props.message) this.props.setMessage('');
-    utilities.getToken().then(token => {
-      const year = utilities.getDateInfo(new Date()).year - 1;
-      const link = `/students.json?auth=${token}&orderBy="year"&endAt="${year}"`;
-      axios.get(`${link}`).then(studentData => {
-        console.log('getting graduates');
-        if (Object.keys(studentData.data).length === 0) this.props.setMessage('No matching students found');
-        const students = {};
-        students['graduates'] = studentData.data;
-        this.setState({
-          letter: 'graduates',
-          endLetter: null,
-          students
+  deleteStudent = (index, id, name) => {
+    let delStudent = window.confirm(`Are you sure you want to delete ${name}?`);
+    if (delStudent) {
+      utilities.getToken().then(token => {
+        const link = `/students/id-${id}`;
+        axios.delete(`${link}.json?auth=${token}`).then(response => {
+          if (response.status === 200) {
+            let updatedStudents = [...this.state.students];
+            // reduce unverified number if student was not verified and unverified number is being displayed
+            let num = this.state.numUnverified;
+            if (!this.state.students[index]['verified'] && this.state.numUnverified) num--;
+            this.setState({ students: [] })
+            updatedStudents.splice(index, 1);
+            this.setState({ 
+              students: updatedStudents,
+              numUnverified: num 
+            });
+            axios.put(`/graduates/id-${id}.json?auth=${token}`, true).catch(error => console.log(error.message))
+          }
         })
       })
-    })
+    }
   }
 
+  // set the style of the alphabet menu letters. Set the wide buttons with the appropriate style and the clicked button as active
   setStyle = (letter) => {
-    if (letter === 'unverified') {
-      return (this.state.letter === 'unverified') ? 'active unverified' : 'unverified';
-    } else if (letter === 'graduates') {
+    if (letter === 'graduates') {
       return (this.state.letter === 'graduates') ? 'active graduates' : 'graduates';
+    } else if (letter === 'unverified') {
+      return (this.state.letter === 'unverified') ? 'acitve unverified' : 'unverified';
     } else {
       return (letter === this.state.letter) ? 'active' : null;
     }
   }
 
-  updateRecord = (updatedInfo, id, field) => {
-    utilities.getToken().then(token => {
-      const link = `/students/id-${id}/${field}`;
-      // unverifying a student's info
-      if (field === 'verified' && updatedInfo === false) {
-        axios.delete(`${link}.json?auth=${token}`).then(response => {
-          if (response.status === 200) {
-            if (this.state.letter !== 'unverified') {
-              const updatedStudents = { ...this.state.students };
-              updatedStudents[this.state.letter][`id-${id}`][field] = updatedInfo;
-              this.setState({ students: updatedStudents });
-              this.props.setMessage(`Update successful!`);
-              setTimeout(() => {
-                this.props.setMessage('');
-              }, 5000);
-            }
-          }
-        })
-      } else if ((field === 'verified' && updatedInfo === true) || field !== 'verified') {
-        axios.put(`${link}.json?auth=${token}`, JSON.stringify(updatedInfo)).then(response => {
-          console.log('modifying student');
-          if (response.status === 200) {
-            if (this.state.letter !== 'unverified') {
-              const updatedStudents = {...this.state.students};
-              updatedStudents[this.state.letter][`id-${id}`][field] = updatedInfo;
-              this.setState({ students: updatedStudents });
-              this.props.setMessage(`Update successful!`);
-              setTimeout(() => {
-                this.props.setMessage('');
-              }, 5000);
-            }
-          }
-        })
-      }
-    })
-    if (field === 'verified' && this.state.numUnverified !== null) {
-      let prevNum = this.state.numUnverified;
-      if (updatedInfo === true) {
-        let newNum = prevNum - 1;
-        this.setState({ numUnverified: newNum})
-      } else {
-        let newNum = prevNum + 1;
-        this.setState({ numUnverified: newNum})
-      }
-    }
-  }
-
-  deleteStudent = (studentKey, name) => {
-    let delStudent = window.confirm(`Are you sure you want to delete ${name}?`);
-    if (delStudent) {
-      utilities.getToken().then(token => {
-        const link = `/students/${studentKey}`;
-        axios.delete(`${link}.json?auth=${token}`).then(response => {
-          if (response.status === 200) {
-            const updatedStudents = {...this.state.students};
-            delete updatedStudents[this.state.letter][studentKey];
-            this.setState({ students: updatedStudents });
-            axios.put(`/graduates/${studentKey}.json?auth=${token}`, true).then(response => {
-              console.log(response.data);
-            })
-          }
-        })
-      })
-    } 
-  }
-
   render() {
-    let deleteBox = null;
-
-    let results = [];
-    const students = {...this.state.students};
-    const letter = this.state.letter;
-    if (students[letter] !== undefined) {
-      if (this.state.letter === 'unverified' || Object.keys(students[letter]).length > 0) {
-        for (let studentKey in students[letter]) {
-          if (this.state.letter === 'graduates') {
-            deleteBox = (
-              <React.Fragment>
-                <label htmlFor="delete">Delete Record?</label>
-                <input type="checkbox"
-                  checked={false}
-                  onChange={() => this.deleteStudent(studentKey, students[letter][studentKey].name)} />
-              </React.Fragment>
-            )
-          }
-          results.push([
-            <form id="results" key={studentKey}>
-              <label htmlFor="name">ID: {students[letter][studentKey].id}</label>
-              <StudentItem 
-                field="name"
-                content={students[letter][studentKey].name}
-                updateRecord={this.updateRecord}
-                id={students[letter][studentKey].id} />
-              <label htmlFor="phone">Student Phone:</label>
-              <StudentItem
-                field="phone"
-                content={students[letter][studentKey].phone}
-                updateRecord={this.updateRecord}
-                id={students[letter][studentKey].id} />
-              <label htmlFor="school">School:</label>
-              <StudentItem
-                field="school"
-                content={students[letter][studentKey].school}
-                updateRecord={this.updateRecord}
-                id={students[letter][studentKey].id} />
-              <label htmlFor="year">Grad Year:</label>
-              <StudentItem
-                field="year"
-                content={students[letter][studentKey].year}
-                updateRecord={this.updateRecord}
-                id={students[letter][studentKey].id} />
-              <label htmlFor="parents">Parents:</label>
-              <StudentItem
-                field="parents"
-                content={students[letter][studentKey].parents}
-                updateRecord={this.updateRecord}
-                id={students[letter][studentKey].id} />
-              <label htmlFor="parentPhone">Parent Phone:</label>
-              <StudentItem
-                field="parentPhone"
-                content={students[letter][studentKey].parentPhone}
-                updateRecord={this.updateRecord}
-                id={students[letter][studentKey].id} />
-              <label htmlFor="notes">Notes:</label>
-              <StudentItem
-                field="notes"
-                content={students[letter][studentKey].notes}
-                updateRecord={this.updateRecord}
-                id={students[letter][studentKey].id} />
-              <label htmlFor="verified">Verified?</label>
-              <StudentItem
-                field="verified"
-                content={students[letter][studentKey].verified}
-                updateRecord={this.updateRecord}
-                id={students[letter][studentKey].id} />
-              {deleteBox}
-            </form>
-          ])
-        }
-      }
+    // display the students if any were found
+    let results = null;
+    if (this.state.students.length > 0) {
+      results = (
+        <StudentResults
+          letter={this.state.letter}
+          students={this.state.students}
+          updateRecord={this.updateRecord}
+          deleteStudent={this.deleteStudent} />
+      )
     }
 
+    // display instructions if graduates tab is selected
     let instructions = null;
     if (this.state.letter === 'graduates') {
       instructions = (
@@ -251,40 +171,16 @@ class StudentInfo extends Component {
         </div>
       )
     }
-    
+
     return (
       <React.Fragment>
-        <form>
-          <label>First name starts with:</label>
-          <ul id="alphabet">
-            <li className={this.setStyle('A')} onClick={() => this.getStudents("A", "B")}>A</li>
-            <li className={this.setStyle('B')} onClick={() => this.getStudents("B", "C")}>B</li>
-            <li className={this.setStyle('C')} onClick={() => this.getStudents("C", "D")}>C</li>
-            <li className={this.setStyle('D')} onClick={() => this.getStudents("D", "E")}>D</li>
-            <li className={this.setStyle('E')} onClick={() => this.getStudents("E", "F")}>E</li>
-            <li className={this.setStyle('F')} onClick={() => this.getStudents("F", "G")}>F</li>
-            <li className={this.setStyle('G')} onClick={() => this.getStudents("G", "H")}>G</li>
-            <li className={this.setStyle('H')} onClick={() => this.getStudents("H", "I")}>H</li>
-            <li className={this.setStyle('I')} onClick={() => this.getStudents("I", "J")}>I</li>
-            <li className={this.setStyle('J')} onClick={() => this.getStudents("J", "K")}>J</li>
-            <li className={this.setStyle('K')} onClick={() => this.getStudents("K", "L")}>K</li>
-            <li className={this.setStyle('L')} onClick={() => this.getStudents("L", "M")}>L</li>
-            <li className={this.setStyle('M')} onClick={() => this.getStudents("M", "N")}>M</li>
-            <li className={this.setStyle('N')} onClick={() => this.getStudents("N", "O")}>N</li>
-            <li className={this.setStyle('O')} onClick={() => this.getStudents("O", "P")}>O</li>
-            <li className={this.setStyle('P')} onClick={() => this.getStudents("P", "Q")}>P</li>
-            <li className={this.setStyle('Q')} onClick={() => this.getStudents("Q", "R")}>Q</li>
-            <li className={this.setStyle('R')} onClick={() => this.getStudents("R", "S")}>R</li>
-            <li className={this.setStyle('S')} onClick={() => this.getStudents("S", "T")}>S</li>
-            <li className={this.setStyle('T')} onClick={() => this.getStudents("T", "U")}>T</li>
-            <li className={this.setStyle('U')} onClick={() => this.getStudents("U", "V")}>U</li>
-            <li className={this.setStyle('V')} onClick={() => this.getStudents("V", "W")}>V</li>
-            <li className={this.setStyle('W')} onClick={() => this.getStudents("W", "Y")}>W/X</li>
-            <li className={this.setStyle('Y')} onClick={() => this.getStudents("Y", null)}>Y/Z</li>
-            <li className={this.setStyle('graduates')} onClick={this.getOldStudents}>Graduates</li>
-            <li className={this.setStyle('unverified')} onClick={this.getUnverifiedStudents}>{this.state.numUnverified} Unverified</li>
-          </ul>
-        </form>
+        {/* display alphabet menu */}
+        <Alphabet
+          setStyle={this.setStyle}
+          getStudents={this.getStudentsByLetter}
+          getOldStudents={this.getOldStudents}
+          getUnverifiedStudents={this.getUnverifiedStudents}
+          numUnverified={this.state.numUnverified} />
         {instructions}
         {results}
       </React.Fragment>

@@ -13,7 +13,7 @@ class StudentItem extends Component {
 
   toggleVerified = (e) => {
     this.setState({ updatedContent: e.target.checked })
-    this.props.updateRecord(e.target.checked, this.props.id, this.props.field);
+    this.props.updateRecord(e.target.checked, this.props.id, this.props.field, this.props.index);
   }
 
   sendUpdate = (e) => {
@@ -22,13 +22,13 @@ class StudentItem extends Component {
       if (this.props.field === 'year') {
         if (/^\d+$/.test(e.target.value) && e.target.value.length === 4) {
           e.target.blur();
-          this.props.updateRecord(e.target.value, this.props.id, this.props.field);
+          this.props.updateRecord(e.target.value, this.props.id, this.props.field, this.props.index);
         } else {
           window.alert('NOT SAVED: Graduation year must be a four digit number');
         }
       } else {
         e.target.blur();
-        this.props.updateRecord(e.target.value, this.props.id, this.props.field);
+        this.props.updateRecord(e.target.value, this.props.id, this.props.field, this.props.index);
       }
     }
   }
