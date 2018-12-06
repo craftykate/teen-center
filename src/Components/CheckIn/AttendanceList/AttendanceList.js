@@ -4,6 +4,7 @@ import utilities from '../../../utils/utilities';
 // show today's students
 const attendanceList = (props) => {
 
+  let presentStudents = 0;
   // function to convert date to readable time format
   const convertTime = (stringTime, ID, inOrOut) => {
     // convert time to readable format
@@ -23,6 +24,7 @@ const attendanceList = (props) => {
       }
     // time is undefined, so they haven't logged out yet, so show log out link
     } else {
+      presentStudents++;
       return <a onClick={() => props.signOut(ID)}>sign out</a>; /* eslint-disable-line */
     }
   }
@@ -52,18 +54,6 @@ const attendanceList = (props) => {
 
   const todaysDate = utilities.getDateInfo(new Date());
   const abbrMonth = todaysDate.monthName.slice(0, 3);
-  let studentCount = null;
-  switch (currentStudents.length) {
-    case undefined:
-      studentCount = '0 students';
-      break;
-    case 1:
-      studentCount = '1 student';
-      break;
-    default:
-      studentCount = `${currentStudents.length} students`
-      break;
-  }
   const todayHeading = `${todaysDate.weekdayName}, ${abbrMonth} ${todaysDate.day}`;
 
   return (
@@ -71,7 +61,7 @@ const attendanceList = (props) => {
       <thead>
         <tr>
           <th colSpan="3" className="heading">
-            <strong>{todayHeading}</strong>  - {studentCount}
+            <strong>{todayHeading}</strong>  - {presentStudents}/{props.currentStudents.length} students
             <span className="heading-note">(<a onClick={props.refreshStudentList}>refresh</a> if you don't see your name)</span>{/* eslint-disable-line */}
           </th>
         </tr>
