@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import axios from '../../../utils/axios';
 import utilities from '../../../utils/utilities';
 import Alphabet from './Alphabet/Alphabet';
-import StudentResults from './StudentResults/StudentResults';
+import Student from './Student/Student';
 
 class StudentInfo extends Component {
   state = {
@@ -150,15 +150,19 @@ class StudentInfo extends Component {
 
   render() {
     // display the students if any were found
-    let results = null;
+    let results = [];
     if (this.state.students.length > 0) {
-      results = (
-        <StudentResults
-          letter={this.state.letter}
-          students={this.state.students}
-          updateRecord={this.updateRecord}
-          deleteStudent={this.deleteStudent} />
-      )
+      for (let studentIndex in this.state.students) {
+        results.push([
+          <Student
+            key={studentIndex}
+            index={studentIndex}
+            letter={this.state.letter}
+            student={this.state.students[studentIndex]}
+            updateRecord={this.updateRecord}
+            deleteStudent={this.deleteStudent} />
+        ])
+      }
     }
 
     // display instructions if graduates tab is selected
