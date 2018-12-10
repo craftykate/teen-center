@@ -8,7 +8,9 @@ class StudentInfo extends Component {
   state = {
     letter: '',
     students: [],
-    numUnverified: null
+    numUnverified: null,
+    perPage: 10,
+    onPage: 0
   }
 
   getStudentsByLetter = (start, end) => {
@@ -38,7 +40,8 @@ class StudentInfo extends Component {
     let students = [];
     this.setState({
       letter,
-      students
+      students,
+      onPage: 0
     })
     axios.get(link).then(studentData => {
       console.log('getting students by letter');
@@ -148,12 +151,19 @@ class StudentInfo extends Component {
     }
   }
 
+  changePage = (jumpTo) => {
+    window.scrollTo(0, 0);
+    this.setState({ onPage: jumpTo })
+  }
+
   render() {
     // display the students if any were found
-    let results = [];
+    let allResults = [];
+    let results = null;
+    let pageLinks = null;
     if (this.state.students.length > 0) {
       for (let studentIndex in this.state.students) {
-        results.push([
+        allResults.push([
           <Student
             key={studentIndex}
             index={studentIndex}
@@ -163,7 +173,34 @@ class StudentInfo extends Component {
             deleteStudent={this.deleteStudent} />
         ])
       }
+      const totalNumPages = Math.ceil(allResults.length / this.state.perPage);
+      results = allResults.slice(this.state.onPage * this.state.perPage, (this.state.onPage + 1) * this.state.perPage);
+      if (totalNumPages > 1) {
+        let links = [];
+        const totalStudents = this.state.students.length;
+        let finalNum = totalStudents;
+        for (let i = 0; i < totalNumPages; i++) {
+          let style = (this.state.onPage === i) ? 'active' : null;
+          finalNum = ((i + 1) * this.state.perPage > totalStudents) ? totalStudents : (i + 1) * this.state.perPage
+          let secondHalf = ((i * this.state.perPage) + 1 === finalNum) ? null : `-${finalNum}`;
+          links.push(
+            <li className={style} key={i} onClick={() => this.changePage(i)}>[{(i * this.state.perPage) + 1}{secondHalf}]</li>
+          );
+        }
+        pageLinks = (
+          <div className="paginate">
+            <span>Results </span>
+            <ul>
+              {links}
+            </ul>
+            {/* <span>]</span> */}
+          </div>
+        )
+      }
     }
+
+    let pressEnter = null;
+    if (this.state.students.length > 0) { pressEnter = <p className="press-enter">Click on a field to edit, press Enter to save</p>;}
 
     // display instructions if graduates tab is selected
     let instructions = null;
@@ -186,7 +223,10 @@ class StudentInfo extends Component {
           getUnverifiedStudents={this.getUnverifiedStudents}
           numUnverified={this.state.numUnverified} />
         {instructions}
+        {pressEnter}
+        {pageLinks}
         {results}
+        {pageLinks}
       </React.Fragment>
     )
   }
