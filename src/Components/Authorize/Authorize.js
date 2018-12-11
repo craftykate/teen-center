@@ -44,7 +44,11 @@ class Authorize extends Component {
 
   toggleReset = () => {
     const switchState = !this.state.pwdReset;
-    this.setState({ pwdReset: switchState });
+    this.setState({ 
+      email: '',
+      password: '',
+      pwdReset: switchState 
+    });
   }
 
   pwdReset = (e) => {
@@ -52,6 +56,7 @@ class Authorize extends Component {
     fire.auth().sendPasswordResetEmail(this.state.email).then(() => {
       this.setState({ 
         email: '',
+        passwords: '',
         pwdReset: false 
       });
       window.alert('An email has been sent to the registered admin email!');
