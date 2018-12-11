@@ -6,7 +6,8 @@ import AuthorizeForm from './AuthorizeForm/AuthorizeForm';
 class Authorize extends Component {
   state = {
     email: '',
-    password: ''
+    password: '',
+    pwdReset: false
   }
 
   // update state with contents of input field
@@ -40,6 +41,22 @@ class Authorize extends Component {
   switchToStudent = () => {
     this.props.setAccount('student');
   }
+
+  toggleReset = () => {
+    const switchState = !this.state.pwdReset;
+    this.setState({ pwdReset: switchState });
+  }
+
+  pwdReset = (e) => {
+    e.preventDefault();
+    fire.auth().sendPasswordResetEmail(this.state.email).then(() => {
+      this.setState({ 
+        email: '',
+        pwdReset: false 
+      });
+      window.alert('An email has been sent to the registered admin email!');
+    }).catch(error => this.props.setMessage(error.message))
+  }
   
   render() {
     // show login form or logout link depending on user login state
@@ -55,7 +72,10 @@ class Authorize extends Component {
         <AuthorizeForm 
           handleTermChange={this.handleTermChange}
           state={this.state} 
-          login={this.login} />
+          login={this.login}
+          showResetForm={this.state.pwdReset}
+          toggleReset={this.toggleReset}
+          pwdReset={this.pwdReset} />
       )
     }
 
