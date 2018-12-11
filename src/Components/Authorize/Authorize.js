@@ -49,6 +49,7 @@ class Authorize extends Component {
       password: '',
       pwdReset: switchState 
     });
+    if (this.props.message) this.props.setMessage('');
   }
 
   pwdReset = (e) => {
