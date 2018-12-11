@@ -4,23 +4,22 @@ import React from 'react';
 const authorizeForm = (props) => {
   let form = (
     <form autoComplete="off">
-      <input autoFocus
-        value={props.state.email}
-        onChange={props.handleTermChange}
-        type="email"
+      <input type="email" autoFocus
         name="email"
-        placeholder="Admin Email" />
-      <input
-        value={props.state.password}
         onChange={props.handleTermChange}
-        type="password"
+        placeholder="Admin Email"
+        value={props.state.email} />
+      <input type="password"
         name="password"
-        placeholder="Password" />
+        onChange={props.handleTermChange}
+        placeholder="Password"
+        value={props.state.password} />
       <button type="submit" onClick={(e) => props.login(e, 'student')}>Launch sign in page</button>
-      <button type="submit" onClick={(e) => props.login(e, 'admin')}>Log in as Admin</button> <br />
+      <button type="submit" onClick={(e) => props.login(e, 'admin')}>Log in as Admin</button> <br/>
       <a onClick={props.toggleReset}>(reset password)</a> {/* eslint-disable-line */}
     </form>
   );
+  // if reset password was clicked show that form instead
   if (props.showResetForm) {
     form = (
       <form autoComplete="off">

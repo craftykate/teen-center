@@ -7,14 +7,12 @@ class Authorize extends Component {
   state = {
     email: '',
     password: '',
-    pwdReset: false
+    pwdReset: false // show or don't show password reset fields
   }
 
   // update state with contents of input field
   handleTermChange = (e) => {
-    this.setState({
-      [e.target.name]: e.target.value
-    })
+    this.setState({ [e.target.name]: e.target.value })
     if (this.props.message) this.props.setMessage(''); // reset error message if there was one
   }
 
@@ -28,12 +26,12 @@ class Authorize extends Component {
       })
       // set which account to log in as
       this.props.setAccount(account);
-    }).catch((error) => { this.props.setMessage(error.message)});
+    }).catch((error) => { this.props.setMessage(error.message) });
   }
 
   // log user out
   logout = () => {
-    fire.auth().signOut();
+    fire.auth().signOut().catch((error) => { this.props.setMessage(error.message) });
     if (this.props.message) this.props.setMessage('');
   }
 
@@ -42,6 +40,7 @@ class Authorize extends Component {
     this.props.setAccount('student');
   }
 
+  // toggle whether to show reset password form
   toggleReset = () => {
     const switchState = !this.state.pwdReset;
     this.setState({ 
@@ -52,6 +51,7 @@ class Authorize extends Component {
     if (this.props.message) this.props.setMessage('');
   }
 
+  // send password reset email
   pwdReset = (e) => {
     e.preventDefault();
     fire.auth().sendPasswordResetEmail(this.state.email).then(() => {
@@ -68,11 +68,14 @@ class Authorize extends Component {
     // show login form or logout link depending on user login state
     let logInOut = null;
     let switchAccounts = null;
+    // if a user has been set, show log out link
     if (this.props.user) {
       logInOut = <li><a onClick={this.logout}>log out admin</a></li> /* eslint-disable-line */
+      // if user is on admin side show link to go to student side
       if (this.props.account === 'admin') {
         switchAccounts = <li><a onClick={this.switchToStudent}>switch to student sign-in</a></li> /* eslint-disable-line */
       }
+    // no one is logged in so show log in form
     } else {
       logInOut = (
         <AuthorizeForm 
@@ -86,12 +89,10 @@ class Authorize extends Component {
     }
 
     return (
-      <React.Fragment>
-        <ul>
-          {switchAccounts}
-          {logInOut}
-        </ul>
-      </React.Fragment>
+      <ul>
+        {switchAccounts}
+        {logInOut}
+      </ul>
     )
   }
 }
