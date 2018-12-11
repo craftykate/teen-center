@@ -15,6 +15,10 @@
 		background-color: white;
 		border-radius: 0 0 20px 20px;
 		@include boxshadow;
+		@media screen and (max-width: 500px) {
+			width: 100%;
+			box-sizing: border-box;
+		}
 	}
 
 	.clear {

@@ -34,7 +34,7 @@ const registerForm = (props) => (
       value={props.state.school} />
 
     <label>Your graduation year:</label>
-    <input type="text"
+    <input type="number"
       onChange={(e) => props.updateField(e, 'year')}
       placeholder="yyyy"
       value={props.state.year} />
