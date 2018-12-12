@@ -27,7 +27,8 @@ const utilities = {
     const month = parseInt(dateArr[0]);
     const day = parseInt(dateArr[1]);
     const year = parseInt(dateArr[2]);
-    if (dateArr.length === 3 && 1 <= month && month <= 12 && 1 <= day && day <= 31 && typeof year === 'number' && year.toString().length === 4) {
+    const dateObj = new Date(dateString);
+    if (dateArr.length === 3 && 1 <= month && month <= 12 && 1 <= day && day <= 31 && typeof year === 'number' && year.toString().length === 4 && dateObj != 'Invalid Date') { {/* eslint-disable-line */}
       return true;
     } else {
       return false;

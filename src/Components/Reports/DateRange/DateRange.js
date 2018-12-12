@@ -27,7 +27,7 @@ class DateRange extends Component {
     // check if both date fields entered
     if (this.state.from && this.state.to) {
       // check if dates entered are valid dates
-      if (utilities.validateDate(this.state.from) && utilities.validateDate(this.state.to)) {
+      if (utilities.validateDate(this.state.from) && utilities.validateDate(this.state.to)) { {/* eslint-disable-line */}
         // turn dates from input fields into database format
         const from = utilities.getDateInfo(this.state.from).link;
         const to = utilities.getDateInfo(this.state.to).link;
