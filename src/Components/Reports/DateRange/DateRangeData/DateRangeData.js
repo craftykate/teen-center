@@ -1,5 +1,6 @@
 import React from 'react';
 
+// results for date range report
 const dateRangeData = (props) => (
   <React.Fragment>
     <table>

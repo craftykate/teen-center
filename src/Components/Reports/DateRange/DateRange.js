@@ -3,15 +3,16 @@ import axios from '../../../utils/axios';
 import utilities from '../../../utils/utilities';
 import DateRangeData from './DateRangeData/DateRangeData';
 
+// get numbers of students signed in over a date range
 class DateRange extends Component {
   state = {
-    from: '',
+    from: '', // date entered in field
     fromString: '', // so the input fields don't change the results header
-    to: '',
+    to: '', // date entered in field
     toString: '', // so the input fields don't change the results header
-    students: 0,
-    visits: 0,
-    averages: {}
+    students: 0, // how many students visited over time range
+    visits: 0, // how many times all students visited over time range
+    averages: {} // number of visits per day for calculating averages
   }
 
   // update the correct state field with whatever has been typed in
@@ -20,9 +21,12 @@ class DateRange extends Component {
     if (this.props.message) this.props.setMessage('');
   }
 
+  // get number of students, number of visits and calculate averages over date range entered
   getDateRangeData = (e) => {
     e.preventDefault(); 
+    // check if both date fields entered
     if (this.state.from && this.state.to) {
+      // check if dates entered are valid dates
       if (utilities.validateDate(this.state.from) && utilities.validateDate(this.state.to)) {
         // turn dates from input fields into database format
         const from = utilities.getDateInfo(this.state.from).link;
@@ -31,12 +35,13 @@ class DateRange extends Component {
           // get log in data from date range
           const link = `/logs.json?auth=${token}&orderBy="$key"&startAt="${from}"&endAt="${to}"`;
           axios.get(link).then(rangeData => {
-            console.log('/logs');
+            // check if there are any results
             if (Object.keys(rangeData.data).length === 0) this.props.setMessage('No records for that data range')
             // to store every visitor's id
             const allIDs = []; 
             // store visits by weekday to make averages
             const averages = {0:{weekNums: 0, visits: 0}, 1:{weekNums: 0, visits: 0}, 2:{weekNums: 0, visits: 0}, 3:{weekNums: 0, visits: 0}, 4:{weekNums: 0, visits: 0}, 5:{weekNums: 0, visits: 0}, 6:{weekNums: 0, visits: 0}};
+
             // go through each day in range
             for (let day in rangeData.data) {
   
@@ -83,11 +88,7 @@ class DateRange extends Component {
     }
   }
 
-  convertDateForLink = (dateString) => {
-    const date = utilities.getDateInfo(dateString);
-    return `${date.year}${date.month}${date.day}`;
-  }
-
+  // Make header dates readable
   formatDate = (dateString) => {
     const date = utilities.getDateInfo(dateString);
     const weekday = date.weekdayName.slice(0, 3);
@@ -97,6 +98,7 @@ class DateRange extends Component {
 
   render() {
     let results = null;
+    // show results once searched
     if (this.state.students) {
       results = (
         <DateRangeData
