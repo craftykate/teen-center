@@ -60,7 +60,6 @@ class SignIn extends Component {
     this.setState({ searchTerm: '' });
     // get info on student
     axios.get(`/students/id-${ID}.json?auth=${token}`).then(studentInfo => {
-      console.log(`getting /students/id-${ID}`);
       if (studentInfo.data) {
         const student = {
           id: studentInfo.data.id,
@@ -90,6 +89,7 @@ class SignIn extends Component {
       // sign in form
       signInOrUp = (
         <form autoComplete="off">
+          <h2>Student Sign-In</h2>
           <input type="text" autoFocus
             name="id"
             className="inline"
@@ -103,9 +103,7 @@ class SignIn extends Component {
     }
 
     return (
-      <React.Fragment>
-        {signInOrUp}
-      </React.Fragment>
+      signInOrUp
     )
   }
 };

@@ -5,8 +5,8 @@ import AuthorizeForm from './AuthorizeForm/AuthorizeForm';
 // log in to the site
 class Authorize extends Component {
   state = {
-    email: '',
-    password: '',
+    email: '', // email entered
+    password: '', // password entered
     pwdReset: false // show or don't show password reset fields
   }
 

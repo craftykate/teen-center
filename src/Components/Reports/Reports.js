@@ -7,7 +7,7 @@ import './Reports.css';
 
 class Reports extends Component {
   state = {
-    view: 'dateRange', // which "page" to look at
+    view: 'student', // which "page" to look at
     message: '' // admin-wide place for error and success messages
   }
 
@@ -33,6 +33,13 @@ class Reports extends Component {
     // choose which "page" to view
     let content = null;
     switch (this.state.view) {
+      case 'student':
+        content = (
+          <StudentInfo
+            message={this.state.message}
+            setMessage={this.setMessage} />
+        );
+        break;
       case 'dateRange':
         content = (
           <DateRange
@@ -43,13 +50,6 @@ class Reports extends Component {
       case 'singleDay':
         content = (
           <SingleDay
-            message={this.state.message}
-            setMessage={this.setMessage} />
-        );
-        break;
-      case 'student':
-        content = (
-          <StudentInfo
             message={this.state.message}
             setMessage={this.setMessage} />
         );
@@ -69,9 +69,9 @@ class Reports extends Component {
       <React.Fragment>
         <nav>
           <ul>
+            <li className={this.setStyle('student')} onClick={() => this.switchView('student')}>Look Up Students</li> {/* eslint-disable-line */}
             <li className={this.setStyle('dateRange')} onClick={() => this.switchView('dateRange')}>Date Range Report</li> {/* eslint-disable-line */}
             <li className={this.setStyle('singleDay')} onClick={() => this.switchView('singleDay')}>Single Day Report</li> {/* eslint-disable-line */}
-            <li className={this.setStyle('student')} onClick={() => this.switchView('student')}>Look Up Students</li> {/* eslint-disable-line */}
             <li className={this.setStyle('pastSignIn')} onClick={() => this.switchView('pastSignIn')}>Past Sign In</li> {/* eslint-disable-line */}
           </ul>
         </nav>

@@ -15,10 +15,10 @@ class Register extends Component {
     agree: false
   }
 
-  // update the correct state field with whatever has been typed in
+  // update the correct field with whatever has been typed in
   updateField = (e, fieldName) => {
     this.setState({ [fieldName]: e.target.value })
-    if (this.props.message) this.props.setMessage('');
+    if (this.props.message) this.props.setMessage(''); 
   }
 
   // toggle state of 
@@ -30,10 +30,12 @@ class Register extends Component {
   // validate fields then add data to database
   validateInfo = (e, signInMethod) => {
     e.preventDefault();
-    // if all fields have been filled out
+    // check if all fields have been filled out
     if (this.state.id && this.state.name && this.state.phone && this.state.school && this.state.year && this.state.parents && this.state.parentPhone && this.state.agree) {
+      // check if first letter of first name is an english letter (necessary for looking up on admin side)
       const firstLetter = this.state.name.charAt(0).toUpperCase();
       if (/[A-Z]/.test(firstLetter)) {
+        // if grad year is a number and 4 digits (necessary for looking up on admin side)
         if (/^\d+$/.test(this.state.year) && this.state.year.length === 4) {
           // take out irrelevant fields
           const student = { ...this.state };
@@ -54,7 +56,7 @@ class Register extends Component {
                   this.props.setMessage("That ID has already been registered")
                 }
 
-              })
+              }).catch(error => this.props.setMessage(error.message)); // something happened checking student ids
             }).catch(error => this.props.setMessage(error.message)); // something happened checking student ids
           }).catch(error => this.props.setMessage(error.message)); // something happened verifying user
         } else {

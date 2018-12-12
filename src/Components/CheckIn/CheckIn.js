@@ -29,7 +29,6 @@ class CheckIn extends Component {
     utilities.getToken().then(token => {
       // post student data to database
       axios.put(`/students/id-${studentInfo.id}.json?auth=${token}`, studentInfo).then(response => {
-        console.log(`registering student`);
         // student data posted successfully
         if (response.status === 200) {
           // hide registration form
@@ -48,6 +47,7 @@ class CheckIn extends Component {
             `You successfully registered and signed in for today` 
             : `You successfully registered and are NOT signed in for today`;
           this.props.setMessage(msg);
+          // erase message after a few seconds
           setTimeout(() => {
             this.props.setMessage('');
           }, 5000);
@@ -69,7 +69,6 @@ class CheckIn extends Component {
       // add student info to today's attendance log
       const link = `/logs/${dateInfo.year}${dateInfo.month}${dateInfo.day}/id-${student.id}.json`;
       axios.put(`${link}?auth=${token}`, student).then(response => {
-        console.log(`signing in student`);
         // if student successfully signed in, update state with current student
         // (since response = 200 I can update state instead of hitting database for current info)
         if (response.status === 200) {
@@ -98,7 +97,6 @@ class CheckIn extends Component {
         if (signedIn) {
           const link = `/logs/${dateInfo.year}${dateInfo.month}${dateInfo.day}/id-${ID}/timeOut.json`;
           axios.put(`${link}?auth=${token}`, dateInfo.now).then(response => {
-            console.log(`signing out student`);
             // also sign them out in state object
             if (response.status === 200) {
               const currentStudents = {...this.state.currentStudents};
@@ -127,7 +125,6 @@ class CheckIn extends Component {
       // delete timeOut node
       const link = `/logs/${dateInfo.year}${dateInfo.month}${dateInfo.day}/id-${ID}/timeOut.json`;
       axios.delete(`${link}?auth=${token}`).then(response => {
-        console.log(`signing back in`);
         // also delete node in state
         if (response.status === 200) {
           const currentStudents = {...this.state.currentStudents};
@@ -147,7 +144,6 @@ class CheckIn extends Component {
     // get signed in students
     const link = `/logs/${dateInfo.year}${dateInfo.month}${dateInfo.day}.json`;
     return axios.get(`${link}?auth=${token}`).then(currentStudents => {
-      console.log(`getting checked-in students`)
       // return checked in students 
       return currentStudents.data ? currentStudents.data : {};
     }).catch(error => console.log(error.message))
