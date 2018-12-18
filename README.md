@@ -5,6 +5,8 @@ A full-featured registration and log-in app for the local teen center. Students 
 * [Background](#background)
 * [Solution](#the-solution)
 * [Features](#features)
+  * [Authentication](#authentication)
+  * [Student-Side: Signing In](#student-side---signing-in)
 
 ## Background
 The teen center is a great place for teens to go after school. It runs entirely on donations and grants but to apply for those grants the center needs to provide data about how many students visit over different time periods and how many total visits they get. They also need to collect some basic data about the students like their parents' phone numbers and which school they go to. Until now, students have been signing in and out on a piece of paper as they come and go. When the administrators collect the data they need for grants it sometimes takes them months to put all the info from the sign in sheets into a spreadsheet. When I built this app they were eight months behind. 
@@ -15,12 +17,13 @@ I built the teen center a custom app in React with a Firebase database where the
 ## Features 
 
 ### Authentication
-When admin first visits the app they see a log in screen. Admin signs in securely using Firebase's SDK authentication. Firebase looks up the user and gets their user id. Admin's UID is hardcoded into Firebase's access rules making sure that only the one user is allowed access to the site. Even if other users are somehow created they won't get to read or write data. 
+When admin first visits the app they see a log in screen. Admin signs in securely using Firebase's SDK authentication. Firebase looks up the user and gets their user id. Admin's UID is hardcoded into Firebase's access rules making sure that only the one user is allowed access to the site. Even if other users are somehow created they won't get to read or write data. If admin forgets the email there's a link that will open another view - admin enters the email on file and Firebase will send an email to reset the password. 
 
-Log in screen: <br/>
-<img src="public/img/login.png" width="600" />
+Log in screen and password reset screen: <br/>
+<img src="public/img/login.png" width="400" />
+<img src="public/img/pwd.png" width="400" />
 
-After signing in, admin chooses between the two sections of the site: the student-facing side where students can register and sign in, and the admin-facing side where they can look up student info and run reports. In order to switch between the two you have to log out and log back in again. I did this on purpose so that students (or anyone else who isn't authorized) can't get student data even if they have access to the sign in computer. 
+After signing in, admin chooses between the two sections of the site: the student-facing side where students can register and sign in, and the admin-facing side where they can look up student info and run reports. There's a link to the student side on the admin side, but no way to get to the admin side from the student side without logging out and back in again. I did this on purpose so that students (or anyone else who isn't authorized) can't get student data even if they have access to the sign in computer. 
 
 Every time data is sent to or recieved, Firebase verifies the user's ID token, refreshing it if it has expired. This allows the sign in computer to stay logged in until admin logs out.
 
