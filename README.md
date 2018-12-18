@@ -7,6 +7,7 @@ A full-featured registration and log-in app for the local teen center. Students 
 * [Features](#features)
   * [Authentication](#authentication)
   * [Student-Side: Signing In](#student-side---signing-in)
+  * [Student-Side: Registration](#student-side---registration)
 
 ## Background
 The teen center is a great place for teens to go after school. It runs entirely on donations and grants but to apply for those grants the center needs to provide data about how many students visit over different time periods and how many total visits they get. They also need to collect some basic data about the students like their parents' phone numbers and which school they go to. Until now, students have been signing in and out on a piece of paper as they come and go. When the administrators collect the data they need for grants it sometimes takes them months to put all the info from the sign in sheets into a spreadsheet. When I built this app they were eight months behind. 
@@ -31,15 +32,15 @@ Every time data is sent to or recieved, Firebase verifies the user's ID token, r
 The main student-facing page is the sign in page showing a list of all students who have signed in that day:  <br/>
 <img src="public/img/signin.png" width="600" />
 
-Students can quickly enter their student ID in the input field at the top and their name and sign in time shows up in the list. Signing out is even easier - when they click "sign out" next to their name the app signs them out and displays the time they left. If a parent calls asking if their kid is there, an administrator can quickly see all students present and when they got there and left. If a kid accidentally signs someone else out by mistake they can click the erroneous signed out time which will turn it back into a sign out link. 
+Students can quickly enter their student ID in the input field at the top and their name and sign in time shows up in the list. Signing out is even easier - when they click "sign out" next to their name the app signs them out and displays the time they left. If a parent calls asking if their kid is there, an administrator can quickly see all students present and when they got there and left. If a kid accidentally signs someone else out by mistake they can click the erroneous signed out time which will turn it back into a sign out link. The app displays how many students are still signed in at the center and how many total students signed in that day. 
 
 ### Student Side - Registration
-The top of the sign in page has the input field to sign in and next to it is a link to register. The first time the students come use the app they will register with their ID and some basic contact information. 
+The top of the sign in page has the input field to sign in and next to it is a link to register. The first time the students use the app they will register with their ID and some basic contact information the center requires. All fields must be filled out and there's some light input validation, like their student ID must not be unique (since that's how they sign in and how data is gathered), names must start with a letter so they will show up in search results and graduation years must be a four digit number so they can be searched by graduation year on the admin side.
 
 Registration form: <br/>
 <img src="public/img/register.png" width="600" />
 
-After filling out all the fields students can choose to either register only or register and sign in. The "Register and Sign in" button does just that - adds their data to the database and signs them in for the day. All fields must be filled out and since they sign in with their student ID that number must not already be taken. 
+After filling out all the fields students can choose to either register only or register and sign in. The "Register and Sign in" button does just that - adds their data to the database and signs them in for the day.
 
 ### Admin Side - Reports
 The most important data the teen center needs is the number of students who visit during a certain time period and how many total visits they get. This is what they use to apply for grants and was the most time consuming part of their paper system. Maybe 73 students visited a total of 629 last month but they didn't know that until they went through each line of the sign in logs and marked each student present for a particular day. Now they go to the "Date Range Report" page, enter a start date and an end date and hit "Run Report" and that data is calculated automatically for them. There's also a part below that showing the average number of students who show up each day of the week so they can plan their volunteers accordingly.
