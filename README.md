@@ -1,16 +1,21 @@
 # Teen Center Log In App
-A full-featured registration and log-in app for the local teen center. Students register once then sign in and sign out on the app. Administrators can run the different reports they need to apply for grants.
+A full-featured registration and log-in app for the local teen center. Students register once then sign in and sign out on the app. Administrators can run the different reports they need to apply for grants and look up and edit student info. 
+
+**Contents**
+* [Background](#background)
+* [Solution](#the-solution)
+* [Features](#features)
 
 ## Background
-The teen center is a great place for teens to go after school. It runs entirely on donations and grants but to apply for those grants the center needs to provide data about how many students visit over different time periods and how many total visits they get. They also need to collect some basic data about the students like their parents' phone numbers and which school they go to. Until now, students have been signing in and out on a piece of paper as they come and go. When the administrators collect the data they need for grants it sometimes takes them months to put all the info from the sign in sheets into a spreadsheet. Right now they are eight months behind. 
+The teen center is a great place for teens to go after school. It runs entirely on donations and grants but to apply for those grants the center needs to provide data about how many students visit over different time periods and how many total visits they get. They also need to collect some basic data about the students like their parents' phone numbers and which school they go to. Until now, students have been signing in and out on a piece of paper as they come and go. When the administrators collect the data they need for grants it sometimes takes them months to put all the info from the sign in sheets into a spreadsheet. When I built this app they were eight months behind. 
 
 ## The Solution
-I built the teen center a custom app in React with a Firebase database where the kids can register with all the required information then sign in and sign out quickly with just their student id. Firebase handles the authentication making the site (and the students' data) secure. Instead of months of data entry, admin can get all the reports they need to apply for grants in under a minute. 
+I built the teen center a custom app in React with a Firebase database where the kids can register with all the required information the center needs then sign in and sign out quickly with just their student id. Firebase handles the authentication making the site (and the students' data) secure. Instead of months of data entry, admin can get all the reports they need to apply for grants in under a minute! The students used to complain that signing in on the paper logs took took much time and now it only takes them a couple seconds to enter their student ID and hit enter.
 
 ## Features 
 
 ### Authentication
-When a user first visits the app they see a log in screen. Admin signs in securely using Firebase's SDK authentication. Firebase looks up the user and gets their user id. Admin's UID is hardcoded into Firebase's access rules making sure that only the one user is allowed access to the site. Even if other users are somehow created they won't get to read or write data.
+When admin first visits the app they see a log in screen. Admin signs in securely using Firebase's SDK authentication. Firebase looks up the user and gets their user id. Admin's UID is hardcoded into Firebase's access rules making sure that only the one user is allowed access to the site. Even if other users are somehow created they won't get to read or write data. 
 
 Log in screen: <br/>
 <img src="public/img/login.png" width="600" />
