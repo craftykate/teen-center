@@ -1,11 +1,14 @@
 import fire from './fire';
 import axios from './axios';
 
+// site-wide reusable functions
 const utilities = {
+  // get firebase functions
   getToken() {
     return fire.auth().currentUser.getIdToken(true)
   },
 
+  // turn a date string into different formats for different things
   getDateInfo(dateString) {
     const now = new Date(dateString);
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -22,6 +25,7 @@ const utilities = {
     }
   },
 
+  // make sure date string is in a valid date format
   validateDate(dateString) {
     const dateArr = dateString.split('/');
     const month = parseInt(dateArr[0]);

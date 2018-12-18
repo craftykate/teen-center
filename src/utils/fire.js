@@ -2,6 +2,7 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import variables from './variables';
 
+// info from web setup on firebase site (on variables page)
 const config = {
   apiKey: variables.FIREBASE.apiKey,
   authDomain: variables.FIREBASE.authDomain,

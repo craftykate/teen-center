@@ -5,10 +5,16 @@ import StudentInfo from './StudentInfo/StudentInfo';
 import PastSignIn from './PastSignIn/PastSignIn';
 import './Reports.css';
 
+// parent component for admin side
 class Reports extends Component {
   state = {
-    view: 'student', // which "page" to look at
+    view: 'student', // which "page" to look at first
     message: '' // admin-wide place for error and success messages
+  }
+
+  // admin-wide error and success message
+  setMessage = (message) => {
+    this.setState({ message });
   }
 
   // choose which page to display
@@ -17,11 +23,6 @@ class Reports extends Component {
       view,
       message: '' 
     })
-  }
-
-  // admin-wide error and success message
-  setMessage = (message) => {
-    this.setState({ message });
   }
 
   // determine if nav is active or not
