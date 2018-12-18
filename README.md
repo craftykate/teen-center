@@ -15,6 +15,7 @@ A full-featured registration and log-in app for the local teen center. Students 
   * [Usability](#usability)
   * [User Feedback](#user-feedback)
   * [Style](#style)
+* [Wrap Up](#wrap-up)
 
 ## Background
 The teen center is a great place for teens to go after school. It runs entirely on donations and grants but to apply for those grants the center needs to provide data about how many students visit over different time periods and how many total visits they get. They also need to collect some basic data about the students like their parents' phone numbers and which school they go to. Until now, students have been signing in and out on a piece of paper as they come and go. When the administrators collect the data they need for grants it sometimes takes them months to put all the info from the sign in sheets into a spreadsheet. When I built this app they were eight months behind. 
@@ -98,4 +99,4 @@ I designed this app to be fresh and bright. I used the [color app I built](http:
 <img src="public/img/icon.png" width="400" />
 
 ## Wrap Up
-I loved building this app. I love the process of gathering, storing and displaying data in meaningful ways, so thinking through the best ways to do that with this app was a fun challenge. I have gotten so much positive feedback from both administrators and students it makes me feel good knowing the students like using it and the administrators (mostly volunteers) have so much less work to do. 
+I loved building this app. I love the process of gathering, storing and displaying data in meaningful ways, so thinking through the best ways to do that with this app was a fun challenge. I'm also the daughter of an engineering psychologist specializing in usability and ergonomics, so a keen eye for usability and a desire for elegant solutions is just built into my DNA. I have gotten so much positive feedback from both administrators and students it makes me feel good knowing the students like using it and the administrators (mostly volunteers) have so much less work to do. 
