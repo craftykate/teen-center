@@ -1,6 +1,8 @@
 import React from 'react';
 
+// editable form with the info on a student on the look up students page. Each student in the results renders one of these forms
 const studentForm = (props) => {
+  // if the current page is the graduated students, show a box to delete the student
   let deleteBox = null;
   if (props.letter === 'graduates') {
     deleteBox = (

@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
 import StudentForm from './StudentForm/StudentForm';
 
+// student result on the look up students page. Each student renders one of these components
 class Student extends Component {
-  state = {}
+  state = {} // student info from database
 
+  // with this I can reset the state to the original settings if user clicks away from a field without saving
   officialState = {
     name: this.props.student.name,
     phone: this.props.student.phone,
@@ -15,9 +17,11 @@ class Student extends Component {
     verified: this.props.student.verified
   }
 
+  // load the original settings into state when component mounts
   componentWillMount() {
     let newState = {};
     for (let item in this.officialState) {
+      // if that field wasn't defined set it to an empty string to avoid later errors
       if (this.officialState[item] === undefined) {
         newState[item] = '';
       } else {
@@ -33,14 +37,17 @@ class Student extends Component {
     if (this.props.message) this.props.setMessage('');
   }
 
+  // toggles whether student is verified
   toggleVerified = (e) => {
     this.setState({ verified: e.target.checked })
     this.props.updateRecord(e.target.checked, this.props.student.id, 'verified', this.props.index);
   }
 
+  // send edited info up to parent component to save it in the database, then take focus away from that field
   sendUpdate = (e, field) => {
     if (e.key === 'Enter') {
       e.preventDefault();
+      // verify the year field is a 4 digit number
       if (field === 'year') {
         if (/^\d+$/.test(e.target.value) && e.target.value.length === 4) {
           this.officialState[field] = e.target.value;
@@ -57,6 +64,7 @@ class Student extends Component {
     }
   }
 
+  // reset the value of the field to the original state (or the saved state) when user clicks away from the field
   resetValue = (field) => {
     if (this.officialState[field] === undefined) {
       this.setState({ [field]: '' })
